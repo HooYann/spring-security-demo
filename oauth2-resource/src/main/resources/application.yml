@@ -1,0 +1,12 @@
+server:
+  port: 8088
+
+security:
+  oauth2:
+    resource:
+      jwt:
+        key-value: 9527
+
+logging.level.root=debug
+
+
