@@ -55,11 +55,6 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     }
 
     @Bean
-    public void userDetailService() {
-
-    }
-
-    @Bean
     public JwtTokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
