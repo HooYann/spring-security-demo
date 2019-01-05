@@ -65,4 +65,6 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         converter.setSigningKey("9527");
         return converter;
     }
+
+
 }
