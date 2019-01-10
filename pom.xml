@@ -10,6 +10,7 @@
         <module>oauth2-resource</module>
         <module>oauth2-authorization</module>
         <module>security-base</module>
+        <module>security-ip</module>
     </modules>
     <packaging>pom</packaging>
 

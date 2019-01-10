@@ -1,0 +1,8 @@
+server:
+  port: 8440
+
+logging:
+  level:
+    org.springframework:
+      debug
+    #root: debug
