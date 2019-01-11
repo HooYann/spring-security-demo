@@ -32,18 +32,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        //InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        //manager.createUser(User.withUsername("Yann").password(new BCryptPasswordEncoder().encode("123456")).authorities("employee").build());
-        //return manager;
-        return new UserDetailsServiceImpl();
-    }
-
     @Override
     @Bean
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("Yann").password(new BCryptPasswordEncoder().encode("123456")).authorities("employee").build());
+        return manager;
+        //return new UserDetailsServiceImpl();
     }
 }

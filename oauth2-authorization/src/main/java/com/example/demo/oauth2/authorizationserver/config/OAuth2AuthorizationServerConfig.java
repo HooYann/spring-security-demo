@@ -45,7 +45,6 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
                 .secret(new BCryptPasswordEncoder().encode("123456"))
                 .scopes("store_manager")
                 .authorizedGrantTypes("password");
-
         //config.withClientDetails(clientDetailsService());
     }
 
