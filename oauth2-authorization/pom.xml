@@ -12,7 +12,11 @@
     <artifactId>oauth2-authorization</artifactId>
 
     <dependencies>
-
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+            <version>5.1.2.RELEASE</version>
+        </dependency>
     </dependencies>
 
 

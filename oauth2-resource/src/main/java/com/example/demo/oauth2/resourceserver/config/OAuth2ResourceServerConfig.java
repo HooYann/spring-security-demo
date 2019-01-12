@@ -26,17 +26,18 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         http
                 .authorizeRequests()
                     .antMatchers("/api/**").hasAuthority("employee")
-                    .anyRequest().authenticated();
+                    .anyRequest().authenticated()
+                    .and();
     }
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resourceConfig) throws Exception {
         resourceConfig.resourceId("dd").stateless(true);
-        //resourceConfig.tokenExtractor()
-        //resourceConfig.tokenStore(new JwtTokenStore())
+        //resourceConfig.tokenExtractor();
+        resourceConfig.tokenStore(tokenStore());
     }
 
-    /*@Bean
+    @Bean
     public JwtTokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
@@ -46,11 +47,11 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setSigningKey("9527");
         return converter;
-    }*/
+    }
 
 
-    /*@Bean
+    @Bean
     public JwtDecoder jwtDecoder() {
-        return new NimbusJwtDecoderJwkSupport("http://localhost:8087");
-    }*/
+        return new NimbusJwtDecoderJwkSupport("http://localhost:8087/.well-known/jwks.json");
+    }
 }

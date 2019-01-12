@@ -1,11 +1,12 @@
 server:
   port: 8088
 
-#security:
-#  oauth2:
-#    resource:
-#      jwt:
-#        key-value: 9527
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: localhost:8087/.well-known/jwks.json
 
 logging:
   level:
