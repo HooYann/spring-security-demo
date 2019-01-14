@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableMBeanExport;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -46,6 +47,9 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserDetailsService userDetailsService;
+
     KeyPair keyPair;
 
     public OAuth2AuthorizationServerConfig(
@@ -61,8 +65,9 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         //config.passwordEncoder(new BCryptPasswordEncoder());
         config.passwordEncoder(NoOpPasswordEncoder.getInstance());
 
-        //config.tokenKeyAccess("permitAll()");
-        //config.checkTokenAccess("isAuthenticated()");
+        config.tokenKeyAccess("permitAll()");
+        config.checkTokenAccess("permitAll()");
+
         //允许表单认证
         config.allowFormAuthenticationForClients();
     }
@@ -70,24 +75,30 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Override
     public void configure(ClientDetailsServiceConfigurer config) throws Exception {
         config.inMemory()
-                .withClient("client_id0")
+                .withClient("client_test")
                     .secret("123456")
-                    .authorizedGrantTypes("authorization_code")
+                    .authorizedGrantTypes(
+                            "authorization_code",
+                            "implicit",
+                            "password",
+                            "client_credentials",
+                            "refresh_token")
                     .scopes("user")
                     .redirectUris("http://localhost:8088")
                     //.authorities("oauth2")
-                    .autoApprove(true)
-                    .and()
-                .withClient("businesspad")
-                    .secret(new BCryptPasswordEncoder().encode("123456"))
-                    .scopes("store_manager")
-                    .authorizedGrantTypes("password");
+                    //.autoApprove(true)
+                    ;
         //config.withClientDetails(clientDetailsService());
     }
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer config) throws Exception {
-        config.authenticationManager(authenticationManager).tokenStore(tokenStore()).accessTokenConverter(accessTokenConverter());
+        config.authenticationManager(authenticationManager);
+        //refresh_token
+        config.userDetailsService(userDetailsService);
+
+        config.tokenStore(tokenStore()).accessTokenConverter(accessTokenConverter());
+        config.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
     @Bean
