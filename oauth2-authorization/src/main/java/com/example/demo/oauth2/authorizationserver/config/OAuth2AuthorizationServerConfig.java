@@ -58,8 +58,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Override
     public void configure(AuthorizationServerSecurityConfigurer config) throws Exception {
         config.passwordEncoder(new BCryptPasswordEncoder());
-        config.tokenKeyAccess("permitAll()");
-        config.checkTokenAccess("isAuthenticated()");
+        //config.tokenKeyAccess("permitAll()");
+        //config.checkTokenAccess("isAuthenticated()");
         //允许表单认证
         config.allowFormAuthenticationForClients();
     }
@@ -67,10 +67,18 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Override
     public void configure(ClientDetailsServiceConfigurer config) throws Exception {
         config.inMemory()
+                .withClient("client_id0")
+                    .secret("123456")
+                    .authorizedGrantTypes("authorization_code")
+                    .scopes("user")
+                    .redirectUris("http://localhost:8088")
+                    //.authorities("oauth2")
+                    .autoApprove(true)
+                    .and()
                 .withClient("businesspad")
-                .secret(new BCryptPasswordEncoder().encode("123456"))
-                .scopes("store_manager")
-                .authorizedGrantTypes("password");
+                    .secret(new BCryptPasswordEncoder().encode("123456"))
+                    .scopes("store_manager")
+                    .authorizedGrantTypes("password");
         //config.withClientDetails(clientDetailsService());
     }
 
