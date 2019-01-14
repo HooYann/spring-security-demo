@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
@@ -57,7 +58,9 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer config) throws Exception {
-        config.passwordEncoder(new BCryptPasswordEncoder());
+        //config.passwordEncoder(new BCryptPasswordEncoder());
+        config.passwordEncoder(NoOpPasswordEncoder.getInstance());
+
         //config.tokenKeyAccess("permitAll()");
         //config.checkTokenAccess("isAuthenticated()");
         //允许表单认证
