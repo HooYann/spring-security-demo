@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableMBeanExport;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -27,8 +28,11 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpoint;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -49,6 +53,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
 
     KeyPair keyPair;
 
@@ -57,7 +63,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
             KeyPair keyPair) throws Exception {
 
         this.authenticationManager = authenticationConfiguration.getAuthenticationManager();
-        this.keyPair = keyPair;
+        //this.keyPair = keyPair;
     }
 
     @Override
@@ -102,14 +108,23 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     }
 
     @Bean
-    public JwtTokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+    public TokenStore tokenStore() {
+        //无状态jwt
+        //return new JwtTokenStore(accessTokenConverter());
+
+        //缓存
+        return new RedisTokenStore(redisConnectionFactory);
     }
 
     @Bean
-    public JwtAccessTokenConverter accessTokenConverter() {
-        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        converter.setKeyPair(keyPair);
+    public AccessTokenConverter accessTokenConverter() {
+        //jwt
+        //JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        //converter.setKeyPair(keyPair);
+        //return converter;
+
+        //普通
+        DefaultAccessTokenConverter converter = new DefaultAccessTokenConverter();
         return converter;
     }
 

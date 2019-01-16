@@ -46,10 +46,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                     //.loginPage("/login") //自己设计了页面
                     .and()
-                .anonymous()//匿名登录
-                    .and()
+                //.anonymous()//匿名登录
+                //    .and()
                 .httpBasic()
                     .disable()
+                //.rememberMe().and()
+                .logout()
+                    //.deleteCookies("JSESSIONID")
+                    .permitAll()
+                    .and()
                 .exceptionHandling()
                     .accessDeniedPage("/login?authorization_error=true")
                     .and()
