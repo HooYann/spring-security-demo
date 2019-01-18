@@ -1,5 +1,6 @@
-package cn.beautybase.authorization.config;
+package cn.beautybase.authorization.core.config;
 
+import cn.beautybase.authorization.core.userdetails.CustomizedUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -61,13 +62,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("Yann")
-                //.password(new BCryptPasswordEncoder().encode("123456"))
-                .password("123456")
-                .authorities("employee").build());
-        return manager;
-        //return new UserDetailsServiceImpl();
+        //InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        //manager.createUser(User.withUsername("Yann")
+        //        .password(new BCryptPasswordEncoder().encode("123456"))
+        //        .authorities("employee").build());
+        //return manager;
+        return new CustomizedUserDetailsService();
     }
 
 

@@ -2,10 +2,12 @@ server:
   port: 8086
 
 spring:
+  jpa:
+    show-sql: true
   datasource:
-    url: jdbc:mysql://db.mjgf.io:3306/wface_test?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
-    username: root
-    password: ayalost321
+    url: jdbc:mysql://beautybase-dm.mysql.rds.aliyuncs.com:3306/wface_finance?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+    username: dev
+    password: Meijigongfang2018
     driver-class-name: com.mysql.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
