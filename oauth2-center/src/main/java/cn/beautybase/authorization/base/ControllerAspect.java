@@ -7,6 +7,8 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
+
 @Component
 @Aspect
 @Slf4j
@@ -31,29 +33,14 @@ public class ControllerAspect {
     }
 
     private Result<?> handlerException(ProceedingJoinPoint pjp, Throwable e) {
-        /*
-        Result<?> result = new Result();
-        // 已知异常
-        if (e instanceof CheckException) {
-            result.setMsg(e.getLocalizedMessage());
-            result.setCode(Result.FAIL);
-        } else if (e instanceof UnloginException) {
-            result.setMsg("Unlogin");
-            result.setCode(Result.NO_LOGIN);
+
+        if(e instanceof ServiceException) {
+            ServiceException se = (ServiceException)e;
+            return Result.buildFailure(se.getCode(), se.getMessage());
         } else {
-            log.error(pjp.getSignature() + " error ", e);
-            //TODO 未知的异常，应该格外注意，可以发送邮件通知等
-            result.setMsg(e.toString());
-            result.setCode(Result.FAIL);
-        }*/
+            return Result.buildFailure(e);
+        }
 
-        Result<?> result = new Result();
-
-        log.error(pjp.getSignature() + " error ", e);
-        result.setMsg(e.toString());
-        result.setCode(Result.FAIL);
-
-        return result;
     }
 
 

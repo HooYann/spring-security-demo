@@ -2,6 +2,7 @@ package cn.beautybase.authorization.service.impl;
 
 import cn.beautybase.authorization.constants.Deleted;
 import cn.beautybase.authorization.dao.UserDao;
+import cn.beautybase.authorization.dto.UserInfoDTO;
 import cn.beautybase.authorization.entity.User;
 import cn.beautybase.authorization.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,5 +16,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByUsername(String username) {
         return userDao.getByUsername(username, Deleted.FALSE);
+    }
+
+    @Override
+    public UserInfoDTO getInfo(Long id) {
+        User user = userDao.getOne(id);
+        return UserInfoDTO.initUser(user);
     }
 }

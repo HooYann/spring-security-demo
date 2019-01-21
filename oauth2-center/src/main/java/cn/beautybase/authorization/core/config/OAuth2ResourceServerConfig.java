@@ -1,11 +1,14 @@
 package cn.beautybase.authorization.core.config;
 
+import jdk.nashorn.internal.parser.Token;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
@@ -18,6 +21,9 @@ import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private static final String RESOURCE_ID = "authorization";
+
+    @Autowired
+    private TokenStore tokenStore;
 
     @Override
     public void configure(HttpSecurity http) throws  Exception {
@@ -32,10 +38,11 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
     public void configure(ResourceServerSecurityConfigurer resourceConfig) throws Exception {
         resourceConfig.resourceId(RESOURCE_ID).stateless(true);
         //resourceConfig.tokenExtractor();
-        resourceConfig.tokenStore(tokenStore());
+        //resourceConfig.tokenStore(tokenStore());
+        resourceConfig.tokenStore(tokenStore);
     }
 
-    @Bean
+    /*@Bean
     public JwtTokenStore tokenStore() {
         return new JwtTokenStore(accessTokenConverter());
     }
@@ -49,7 +56,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         //converter.setVerifier(new RsaVerifier("-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjvBtqsGCOmnYzwe/+HvgOqlKk6HPiLEzS6uCCcnVkFXrhnkPMZ+uQXTR0u+7ZklF0XC7+AMW8FQDOJS1T7IyJpCyeU4lS8RIf/Z8RX51gPGnQWkRvNw61RfiSuSA45LR5NrFTAAGoXUca/lZnbqnl0td+6hBDVeHYkkpAsSck1NPhlcsn+Pvc2Vleui/Iy1U2mzZCM1Vx6Dy7x9IeP/rTNtDhULDMFbB/JYs+Dg6Zd5Ounb3mP57tBGhLYN7zJkN1AAaBYkElsc4GUsGsUWKqgteQSXZorpf6HdSJsQMZBDd7xG8zDDJ28hGjJSgWBndRGSzQEYU09Xbtzk+8khPuwIDAQAB\n-----END PUBLIC KEY-----"));
         converter.setVerifierKey("-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjvBtqsGCOmnYzwe/+HvgOqlKk6HPiLEzS6uCCcnVkFXrhnkPMZ+uQXTR0u+7ZklF0XC7+AMW8FQDOJS1T7IyJpCyeU4lS8RIf/Z8RX51gPGnQWkRvNw61RfiSuSA45LR5NrFTAAGoXUca/lZnbqnl0td+6hBDVeHYkkpAsSck1NPhlcsn+Pvc2Vleui/Iy1U2mzZCM1Vx6Dy7x9IeP/rTNtDhULDMFbB/JYs+Dg6Zd5Ounb3mP57tBGhLYN7zJkN1AAaBYkElsc4GUsGsUWKqgteQSXZorpf6HdSJsQMZBDd7xG8zDDJ28hGjJSgWBndRGSzQEYU09Xbtzk+8khPuwIDAQAB\n-----END PUBLIC KEY-----");
         return converter;
-    }
+    }*/
 
 
     /*@Bean

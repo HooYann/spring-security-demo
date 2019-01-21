@@ -19,8 +19,7 @@ public class UserController extends BaseController {
 
     @GetMapping("/api/userinfo")
     public Result<UserInfoDTO> userInfo() {
-        UserDetails currentUser = SecurityUtils.currentUser();
-        //UserInfoDTO info = userService.getInfo(userId);
-        return new Result
+        UserInfoDTO info = userService.getInfo(SecurityUtils.currentUserId());
+        return this.succeed(info);
     }
 }

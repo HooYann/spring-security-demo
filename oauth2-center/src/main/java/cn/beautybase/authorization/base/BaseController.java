@@ -7,10 +7,36 @@ public class BaseController {
 
     protected Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public <T> Result<T> result(T data) {
-        return new Result(data);
+    public <T> Result<T> succeed() {
+       return Result.buildSuccess();
     }
 
-    xxxx
+    public <T> Result<T> succeed(String msg) {
+        return Result.buildSuccess(msg);
+    }
+
+    public <T> Result<T> succeed(T data) {
+        return Result.buildSuccess(data);
+    }
+
+    public <T> Result<T> succeed(String msg, T data) {
+        return Result.buildSuccess(msg, data);
+    }
+
+    public <T> Result<T> fail() {
+        return Result.buildFailure();
+    }
+
+    public <T> Result<T> fail(int code) {
+        return Result.buildFailure(code);
+    }
+
+    public <T> Result<T> fail(String message) {
+        return Result.buildFailure(message);
+    }
+
+    public <T> Result<T> fail(int code, String message) {
+        return Result.buildFailure(code, message);
+    }
 
 }
