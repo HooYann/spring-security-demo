@@ -1,5 +1,6 @@
 package cn.beautybase.authorization.core.config;
 
+import cn.beautybase.authorization.core.token.CustomizedUserAuthenticationConverter;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpoint;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.DefaultUserAuthenticationConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -107,6 +111,14 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         //jwt
         JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
         converter.setKeyPair(keyPair);
+
+        CustomizedUserAuthenticationConverter userAuthenticationConverter = new CustomizedUserAuthenticationConverter();
+        //userAuthenticationConverter.setUserDetailsService(userDetailsService);
+
+        DefaultAccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
+        tokenConverter.setUserTokenConverter(userAuthenticationConverter);
+        converter.setAccessTokenConverter(tokenConverter);
+
         return converter;
     }
 

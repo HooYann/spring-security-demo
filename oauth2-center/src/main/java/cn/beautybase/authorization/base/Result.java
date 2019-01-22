@@ -35,7 +35,7 @@ public class Result<T> implements Serializable {
         return buildSuccess(msg, null);
     }
     public static <T> Result<T> buildSuccess(T data) {
-        return buildSuccess(MSG_EMPTY, null);
+        return buildSuccess(MSG_EMPTY, data);
     }
     public static <T> Result<T> buildSuccess(String msg, T data) {
         return build(true, CODE_SUCCESS, msg, data);

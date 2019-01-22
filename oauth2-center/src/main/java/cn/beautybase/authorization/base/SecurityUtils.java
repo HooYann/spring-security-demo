@@ -1,24 +1,34 @@
 package cn.beautybase.authorization.base;
 
-import cn.beautybase.authorization.entity.User;
+import cn.beautybase.authorization.core.userdetails.SimpleUser;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * 只能获取当前用户ID和用户名，jwt只携带用户信息里的用户ID和用户名
+ */
 public class SecurityUtils {
 
     public static Long currentUserId() {
-        User user = currentUser(User.class);
+        SimpleUser user = currentUser(SimpleUser.class);
         if(user == null) {
             return null;
         }
         return user.getId();
     }
 
-    public static User currentUser() {
-        return currentUser(User.class);
+    public static String currentUsername() {
+        SimpleUser user = currentUser(SimpleUser.class);
+        if(user == null) {
+            return null;
+        }
+        return user.getUsername();
     }
 
-    public static <T> T currentUser(Class<T> clazz) {
+    private static SimpleUser currentUser() {
+        return currentUser(SimpleUser.class);
+    }
+
+    private static <T> T currentUser(Class<T> clazz) {
         T user = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if(clazz.isAssignableFrom(principal.getClass())) {
