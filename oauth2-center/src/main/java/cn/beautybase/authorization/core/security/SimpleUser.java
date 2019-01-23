@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.core.userdetails;
+package cn.beautybase.authorization.core.security;
 
 public class SimpleUser {
 

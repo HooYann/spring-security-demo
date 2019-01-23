@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.constants;
+package cn.beautybase.authorization.biz.constants;
 
 /**
  * 用户状态，1：正常，0：禁用，-1锁定

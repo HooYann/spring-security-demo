@@ -1,6 +1,5 @@
-package cn.beautybase.authorization.base;
+package cn.beautybase.authorization.core.security;
 
-import cn.beautybase.authorization.core.userdetails.SimpleUser;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -9,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class SecurityUtils {
 
     public static Long currentUserId() {
-        SimpleUser user = currentUser(SimpleUser.class);
+        SimpleUser user = currentUser();
         if(user == null) {
             return null;
         }
@@ -17,7 +16,7 @@ public class SecurityUtils {
     }
 
     public static String currentUsername() {
-        SimpleUser user = currentUser(SimpleUser.class);
+        SimpleUser user = currentUser();
         if(user == null) {
             return null;
         }

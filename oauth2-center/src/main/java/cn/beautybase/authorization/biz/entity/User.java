@@ -1,6 +1,6 @@
-package cn.beautybase.authorization.entity;
+package cn.beautybase.authorization.biz.entity;
 
-import cn.beautybase.authorization.constants.UserStatus;
+import cn.beautybase.authorization.biz.constants.UserStatus;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

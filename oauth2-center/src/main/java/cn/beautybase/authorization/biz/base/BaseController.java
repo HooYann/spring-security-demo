@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.base;
+package cn.beautybase.authorization.biz.base;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

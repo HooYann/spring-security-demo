@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.base;
+package cn.beautybase.authorization.biz.base;
 
 import lombok.Data;
 

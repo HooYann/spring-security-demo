@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.base;
+package cn.beautybase.authorization.biz.base;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -7,14 +7,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
-
 @Component
 @Aspect
 @Slf4j
 public class ControllerAspect {
 
-    @Pointcut("execution(public cn.beautybase.authorization.base.Result *(..))")
+    @Pointcut("execution(public cn.beautybase.authorization.biz.base.Result *(..))")
     public void handleControllerMethod() {
     }
 

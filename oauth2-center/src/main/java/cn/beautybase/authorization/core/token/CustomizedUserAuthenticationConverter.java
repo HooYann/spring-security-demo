@@ -1,7 +1,7 @@
 package cn.beautybase.authorization.core.token;
 
-import cn.beautybase.authorization.core.userdetails.SimpleUser;
-import cn.beautybase.authorization.entity.User;
+import cn.beautybase.authorization.biz.entity.User;
+import cn.beautybase.authorization.core.security.SimpleUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

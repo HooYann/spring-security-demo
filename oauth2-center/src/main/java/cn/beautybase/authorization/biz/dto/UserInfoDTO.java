@@ -1,15 +1,9 @@
-package cn.beautybase.authorization.dto;
+package cn.beautybase.authorization.biz.dto;
 
-import cn.beautybase.authorization.entity.User;
+import cn.beautybase.authorization.biz.entity.User;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data

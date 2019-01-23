@@ -1,15 +1,12 @@
-package cn.beautybase.authorization.controller;
+package cn.beautybase.authorization.biz.controller;
 
-import cn.beautybase.authorization.base.BaseController;
-import cn.beautybase.authorization.base.Result;
-import cn.beautybase.authorization.base.SecurityUtils;
-import cn.beautybase.authorization.dto.UserInfoDTO;
-import cn.beautybase.authorization.service.UserService;
+import cn.beautybase.authorization.biz.base.BaseController;
+import cn.beautybase.authorization.biz.base.Result;
+import cn.beautybase.authorization.core.security.SecurityUtils;
+import cn.beautybase.authorization.biz.dto.UserInfoDTO;
+import cn.beautybase.authorization.biz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

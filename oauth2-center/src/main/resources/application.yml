@@ -31,6 +31,11 @@ spring:
           max-idle: 50
           max-active: 100
 
+cache:
+  defaultExpiration: 86400
+  expireMap:
+    user: 300
+
 
 mybatis-plus:
   #typeEnumsPackage: com.mjgf.biz.payment.enums;com.wface.citic.enums
@@ -52,6 +57,7 @@ logging:
   level:
     org.springframework:
       security: debug
+      data: debug
 
 
 

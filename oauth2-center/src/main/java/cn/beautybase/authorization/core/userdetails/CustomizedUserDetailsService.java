@@ -1,9 +1,8 @@
 package cn.beautybase.authorization.core.userdetails;
 
-import cn.beautybase.authorization.core.exception.UserIdNotFoundException;
-import cn.beautybase.authorization.entity.User;
-import cn.beautybase.authorization.service.RoleService;
-import cn.beautybase.authorization.service.UserService;
+import cn.beautybase.authorization.biz.entity.User;
+import cn.beautybase.authorization.biz.service.RoleService;
+import cn.beautybase.authorization.biz.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

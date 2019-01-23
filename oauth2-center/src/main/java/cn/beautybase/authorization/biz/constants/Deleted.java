@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.constants;
+package cn.beautybase.authorization.biz.constants;
 
 /**
  * 删除标志

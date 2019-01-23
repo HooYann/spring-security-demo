@@ -1,6 +1,6 @@
-package cn.beautybase.authorization.service.impl;
+package cn.beautybase.authorization.biz.service.impl;
 
-import cn.beautybase.authorization.service.RoleService;
+import cn.beautybase.authorization.biz.service.RoleService;
 import org.springframework.stereotype.Service;
 
 @Service

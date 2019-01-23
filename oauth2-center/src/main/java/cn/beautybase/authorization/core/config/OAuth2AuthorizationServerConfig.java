@@ -36,6 +36,8 @@ import java.util.Map;
 
 /**
  * security oauth2 认证服务器配置
+ * @author Yann
+ * @since 2019-01-19
  */
 @Configuration
 @EnableAuthorizationServer

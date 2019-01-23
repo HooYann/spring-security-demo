@@ -1,7 +1,7 @@
-package cn.beautybase.authorization.service;
+package cn.beautybase.authorization.biz.service;
 
-import cn.beautybase.authorization.dto.UserInfoDTO;
-import cn.beautybase.authorization.entity.User;
+import cn.beautybase.authorization.biz.dto.UserInfoDTO;
+import cn.beautybase.authorization.biz.entity.User;
 
 public interface UserService {
     /**

@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.base;
+package cn.beautybase.authorization.biz.base;
 
 /**
  * 平台服务层异常，主要是在业务数据或者状态异常时使用
