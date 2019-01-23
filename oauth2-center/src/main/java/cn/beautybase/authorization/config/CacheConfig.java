@@ -23,6 +23,9 @@ import java.util.Map;
 /**
  * @author Yann
  * @since 2019-01-23
+ *
+ * data-redis默认key=cacheName::key，如user::3799
+ *
  */
 @Configuration
 @EnableCaching

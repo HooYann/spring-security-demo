@@ -6,6 +6,5 @@ package cn.beautybase.authorization.biz.constants;
 public interface CacheAttributes {
 
     String USER = "user";
-    String USER_PREFIX = "user";
 
 }
