@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.config;
+package cn.beautybase.authorization.cache;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
