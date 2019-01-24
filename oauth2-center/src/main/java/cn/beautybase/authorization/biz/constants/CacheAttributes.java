@@ -7,4 +7,5 @@ public interface CacheAttributes {
 
     String USER = "user";
 
+    String OAUTH2_CLIENT = "oauth2client";
 }

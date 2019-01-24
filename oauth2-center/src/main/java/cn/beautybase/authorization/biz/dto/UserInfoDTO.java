@@ -29,8 +29,7 @@ public class UserInfoDTO implements Serializable {
 
     private String status;
 
-    public static UserInfoDTO init(User user) {
-        UserInfoDTO userInfo = new UserInfoDTO();
+    public UserInfoDTO init(User user) {
         //userInfo.id = user.getId();
         //username = user.getUsername();
         //userInfo.name = user.getName();
@@ -39,8 +38,8 @@ public class UserInfoDTO implements Serializable {
         //userInfo.email = user.getEmail();
         //userInfo.avatar = user.getAvatar();
         //userInfo.status = user.getStatus();
-        BeanUtils.copyProperties(user, userInfo);
-        return userInfo;
+        BeanUtils.copyProperties(user, this);
+        return this;
     }
 
 

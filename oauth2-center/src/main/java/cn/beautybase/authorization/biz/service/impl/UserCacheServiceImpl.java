@@ -15,7 +15,7 @@ public class UserCacheServiceImpl implements UserCacheService {
     @Override
     public UserInfoDTO getInfo(Long id) {
         User user = userDao.findById(id).get();
-        return UserInfoDTO.init(user);
+        return new UserInfoDTO().init(user);
     }
 
 }

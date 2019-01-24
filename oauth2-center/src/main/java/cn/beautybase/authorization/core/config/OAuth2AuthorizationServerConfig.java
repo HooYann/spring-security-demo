@@ -1,5 +1,6 @@
 package cn.beautybase.authorization.core.config;
 
+import cn.beautybase.authorization.core.clientdetails.CustomizedClientDetailsService;
 import cn.beautybase.authorization.core.token.CustomizedUserAuthenticationConverter;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -54,6 +55,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private ClientDetailsService clientDetailsService;
 
     KeyPair keyPair;
 
@@ -78,7 +81,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
     @Override
     public void configure(ClientDetailsServiceConfigurer config) throws Exception {
-        config.inMemory()
+        /*config.inMemory()
                 .withClient("client_test")
                 .secret(new BCryptPasswordEncoder().encode("123456"))
                 .authorizedGrantTypes(
@@ -90,9 +93,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
                 .scopes("user")
                 .redirectUris("http://localhost:8088")
                 //.authorities("oauth2")
-                .autoApprove(true)
-        ;
-        //config.withClientDetails(clientDetailsService());
+                .autoApprove(true);*/
+        config.withClientDetails(new CustomizedClientDetailsService());
     }
 
     @Override
