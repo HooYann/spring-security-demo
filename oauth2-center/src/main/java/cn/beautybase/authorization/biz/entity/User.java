@@ -9,9 +9,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 @Data
 @Entity
@@ -29,7 +29,12 @@ public class User implements UserDetails {
     @Column(length = 20)
     private String username;
     /**
-     * 名称
+     * 昵称
+     */
+    @Column
+    private String nickname;
+    /**
+     * 真实姓名
      */
     //@NotNull(message = "姓名不能为空")
     //@Length(max = 20,message = "姓名长度必须为{max}个字符内")
@@ -69,12 +74,12 @@ public class User implements UserDetails {
      * 创建时间
      */
     @Column(name = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
     /**
      * 修改时间
      */
     @Column(name = "update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
     /**
      * 用户状态，1：正常，0：禁用，-1锁定
      */

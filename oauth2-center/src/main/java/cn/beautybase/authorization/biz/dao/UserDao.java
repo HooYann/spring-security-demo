@@ -6,18 +6,25 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface UserDao extends JpaRepository<User, Long> {
 
     //自定义写法1
-    //@Query("SELECT O FROM UserDO O WHERE O.name = :name1  OR O.name = :name2 ")
+    //@Query("select O from UserDO O where O.name = :name1  OR O.name = :name2 ")
     //List<User> findTwoName(@Param("name1") String name1, @Param("name2") String name2);
 
     //自定义写法2
-    //@Query(nativeQuery = true, value = "SELECT * FROM AUTH_USER WHERE name = :name1  OR name = :name2 ")
+    //@Query(nativeQuery = true, value = "select * from AUTH_USER where name = :name1  OR name = :name2 ")
     //List<User> findSQL(@Param("name1") String name1, @Param("name2") String name2);
 
-    @Query("SELECT O FROM User O WHERE O.username = :username and O.deleted =  :deleted ")
+    @Query("select O from User O where O.username = :username and O.deleted =  :deleted ")
     User getByUsername(@Param("username") String username, @Param("deleted") String deleted);
 
+    @Query("select O from User O where (O.username = :username or O.phoneNumber = :username) and O.deleted =  :deleted ")
+    List<User> listByUsernameOrPhoneNumber(String username, String deleted);
+
+    @Query("select O from User O where (O.username = :username or O.email = :username) and O.deleted =  :deleted ")
+    List<User> listByUsernameOrEmail(String username, String deleted);
 }
