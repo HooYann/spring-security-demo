@@ -35,6 +35,7 @@ cache:
   defaultExpiration: 86400
   expireMap:
     user: 300
+    smsCode: 90
 
 
 mybatis-plus:
