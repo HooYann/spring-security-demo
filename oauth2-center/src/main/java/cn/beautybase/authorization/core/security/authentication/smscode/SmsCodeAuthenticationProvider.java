@@ -16,8 +16,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-
 @Data
 public class SmsCodeAuthenticationProvider implements AuthenticationProvider {
 

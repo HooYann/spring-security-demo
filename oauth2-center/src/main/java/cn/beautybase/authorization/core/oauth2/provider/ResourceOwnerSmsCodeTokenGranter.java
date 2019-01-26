@@ -3,13 +3,11 @@ package cn.beautybase.authorization.core.oauth2.provider;
 import cn.beautybase.authorization.core.security.authentication.smscode.SmsCodeAuthenticationToken;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.common.exceptions.InvalidClientException;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.token.AbstractTokenGranter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 

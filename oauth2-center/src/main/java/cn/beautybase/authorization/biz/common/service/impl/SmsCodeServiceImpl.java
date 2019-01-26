@@ -1,6 +1,5 @@
 package cn.beautybase.authorization.biz.common.service.impl;
 
-import cn.beautybase.authorization.biz.base.ServiceException;
 import cn.beautybase.authorization.biz.common.service.SmsCodeCacheService;
 import cn.beautybase.authorization.biz.common.service.SmsCodeLogService;
 import cn.beautybase.authorization.biz.common.service.SmsCodeService;
