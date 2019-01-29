@@ -12,6 +12,7 @@
         <module>security-base</module>
         <module>security-ip</module>
         <module>oauth2-center</module>
+        <module>security-social</module>
     </modules>
     <packaging>pom</packaging>
 

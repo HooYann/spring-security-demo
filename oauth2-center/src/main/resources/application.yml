@@ -37,23 +37,6 @@ cache:
     user: 300
     smsCode: 90
 
-
-mybatis-plus:
-  #typeEnumsPackage: com.mjgf.biz.payment.enums;com.wface.citic.enums
-  typeAliasesPackage: com.example.*.entity
-  mapper-locations: classpath*:/mappers/*Mapper.xml
-  global-config:
-    refresh-mapper: false
-    id-type: 0
-    db-column-underline: true
-  configuration:
-    multipleResultSetsEnabled: true
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-    lazyLoadingEnabled: true
-    cache-enabled: true
-
-
 logging:
   level:
     org.springframework:
