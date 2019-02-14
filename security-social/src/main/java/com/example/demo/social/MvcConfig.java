@@ -1,11 +1,11 @@
-package com.example.demo.ip;
+package com.example.demo.social;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-public class MvcConfig extends WebMvcConfigurerAdapter  {
+public class MvcConfig extends WebMvcConfigurerAdapter {
 
     /**
      * 一种快捷定义方式，类似于@RequestMapping
@@ -15,8 +15,7 @@ public class MvcConfig extends WebMvcConfigurerAdapter  {
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/home").setViewName("home");
         registry.addViewController("/").setViewName("home");
-        registry.addViewController("/iphello").setViewName("iphello");
-        registry.addViewController("/iplogin").setViewName("iplogin");
+        registry.addViewController("/login").setViewName("login");
     }
 
 }
