@@ -11,8 +11,8 @@ public class GitHubImpl extends AbstractOAuth2ApiBinding implements GitHub {
     }
 
     @Override
-    public GitHubUserProfile getUserProfile() {
-        return getRestTemplate().getForObject(buildUri("user"), GitHubUserProfile.class);
+    public GitHubUser getUser() {
+        return getRestTemplate().getForObject(buildUri("user"), GitHubUser.class);
     }
 
     public String buildUri(String path) {

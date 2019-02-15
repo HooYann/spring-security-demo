@@ -4,6 +4,6 @@ import org.springframework.social.ApiBinding;
 
 public interface GitHub extends ApiBinding {
 
-    GitHubUserProfile getUserProfile();
+    GitHubUser getUser();
 
 }

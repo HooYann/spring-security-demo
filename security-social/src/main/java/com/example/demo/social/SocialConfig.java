@@ -46,6 +46,7 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Bean
     public ProviderSignInController providerSignInController(ConnectionFactoryLocator connectionFactoryLocator, UsersConnectionRepository usersConnectionRepository, SimpleSignInAdapter simpleSignInAdapter) {
         ((InMemoryUsersConnectionRepository) usersConnectionRepository).setConnectionSignUp((Connection<?> connection) -> connection.getKey().getProviderUserId());
-        return new ProviderSignInController(connectionFactoryLocator, usersConnectionRepository, simpleSignInAdapter);
+        ProviderSignInController controller = new ProviderSignInController(connectionFactoryLocator, usersConnectionRepository, simpleSignInAdapter);
+        return controller;
     }
 }

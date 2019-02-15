@@ -1,7 +1,7 @@
 package com.example.demo.social.github.connect;
 
 import com.example.demo.social.github.api.GitHub;
-import com.example.demo.social.github.api.GitHubUserProfile;
+import com.example.demo.social.github.api.GitHubUser;
 import org.springframework.social.connect.ApiAdapter;
 import org.springframework.social.connect.ConnectionValues;
 import org.springframework.social.connect.UserProfile;
@@ -12,7 +12,7 @@ public class GitHubAdapter implements ApiAdapter<GitHub> {
     @Override
     public boolean test(GitHub api) {
         try{
-            api.getUserProfile();
+            api.getUser();
             return true;
         } catch (HttpClientErrorException e) {
             return false;
@@ -21,17 +21,17 @@ public class GitHubAdapter implements ApiAdapter<GitHub> {
 
     @Override
     public void setConnectionValues(GitHub api, ConnectionValues values) {
-        GitHubUserProfile profile = api.getUserProfile();
-        values.setProviderUserId(String.valueOf(profile.getId()));
-        values.setDisplayName(profile.getLogin());
-        values.setProfileUrl("https://github.com/" + profile.getLogin());
-        values.setImageUrl(profile.getAvatarUrl());
+        GitHubUser user = api.getUser();
+        values.setProviderUserId(String.valueOf(user.getId()));
+        values.setDisplayName(user.getLogin());
+        values.setProfileUrl("https://github.com/" + user.getLogin());
+        values.setImageUrl(user.getAvatarUrl());
     }
 
     @Override
     public UserProfile fetchUserProfile(GitHub api) {
-        GitHubUserProfile profile = api.getUserProfile();
-        return new UserProfileBuilder().setName(profile.getName()).setEmail(profile.getEmail()).setUsername(profile.getLogin()).build();
+        GitHubUser user = api.getUser();
+        return new UserProfileBuilder().setName(user.getName()).setEmail(user.getEmail()).setUsername(user.getLogin()).build();
     }
 
     @Override
