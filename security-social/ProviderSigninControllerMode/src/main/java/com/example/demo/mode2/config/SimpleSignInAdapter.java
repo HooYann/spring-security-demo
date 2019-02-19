@@ -23,6 +23,7 @@ public class SimpleSignInAdapter implements SignInAdapter {
             System.out.println(user);
             SecurityContextHolder.getContext().setAuthentication(
                     new UsernamePasswordAuthenticationToken(id, null, null));
+            //跳到完善用户信息页面
             return "/signup";
         }
         return null;
