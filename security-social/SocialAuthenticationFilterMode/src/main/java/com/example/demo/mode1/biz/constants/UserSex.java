@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.biz.constants;
+package com.example.demo.mode1.biz.constants;
 
 /**
  * 用户性别
