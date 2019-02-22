@@ -28,4 +28,9 @@ public class UserServiceImpl implements UserService {
     public UserInfoDTO getInfo(Long id) {
         return userCacheService.getInfo(id);
     }
+
+    @Override
+    public User add(User user) {
+        return userDao.save(user);
+    }
 }

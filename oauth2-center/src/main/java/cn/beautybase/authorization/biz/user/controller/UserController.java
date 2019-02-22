@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class UserController extends BaseController {
+
     @Autowired
     private UserService userService;
 
@@ -19,4 +20,5 @@ public class UserController extends BaseController {
         UserInfoDTO info = userService.getInfo(SecurityUtils.currentUserId());
         return this.succeed(info);
     }
+
 }

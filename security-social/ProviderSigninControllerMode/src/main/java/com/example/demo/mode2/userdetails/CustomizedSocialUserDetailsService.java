@@ -10,7 +10,7 @@ import org.springframework.social.security.SocialUser;
 import org.springframework.social.security.SocialUserDetails;
 import org.springframework.social.security.SocialUserDetailsService;
 
-public class DefaultSocialUserDetailsService implements UserDetailsService, SocialUserDetailsService {
+public class CustomizedSocialUserDetailsService implements UserDetailsService, SocialUserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;

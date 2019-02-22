@@ -1,6 +1,6 @@
 package com.example.demo.mode2.config;
 
-import com.example.demo.mode2.userdetails.DefaultSocialUserDetailsService;
+import com.example.demo.mode2.userdetails.CustomizedSocialUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public SocialUserDetailsService socialUserDetailsService() {
-        return new DefaultSocialUserDetailsService();
+        return new CustomizedSocialUserDetailsService();
     }
 
     @Bean

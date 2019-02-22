@@ -13,7 +13,7 @@
         <module>security-ip</module>
         <module>oauth2-center</module>
         <module>security-social</module>
-    </modules>
+	</modules>
     <packaging>pom</packaging>
 
 	<name>spring-security-demo</name>
@@ -57,6 +57,11 @@
 		</dependency>-->
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
@@ -72,6 +77,38 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+
+
+			<dependency>
+				<groupId>com.github.wxpay</groupId>
+				<artifactId>wxpay-sdk</artifactId>
+				<version>0.0.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-common</artifactId>
+				<version>3.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-miniapp</artifactId>
+				<version>3.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>weixin-java-pay</artifactId>
+				<version>3.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.github.binarywang</groupId>
+				<artifactId>qrcode-utils</artifactId>
+				<version>1.1</version>
+			</dependency>
+
+
 	</dependencies>
 
 	<build>

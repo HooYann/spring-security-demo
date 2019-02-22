@@ -6,3 +6,43 @@ logging:
     org.springframework:
       debug
     #root: debug
+
+social:
+  providers:
+    github: 5a3d6eb9901ccd9bd90d,876164bc653ebe2d327f797627efd83bde5d8f2d
+
+spring:
+  jpa:
+    show-sql: true
+  datasource:
+    url: jdbc:mysql://beautybase-dm.mysql.rds.aliyuncs.com:3306/wface_finance?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+    username: dev
+    password: Meijigongfang2018
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      auto-commit: true
+      idle-timeout: 30000
+      pool-name: DatebookHikariCP
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  redis:
+      host: redis.mjgf.io
+      port: 6379
+      database: 4
+      lettuce:
+        pool:
+          min-idle: 10
+          max-wait: 5000ms
+          max-idle: 50
+          max-active: 100
+
+cache:
+  defaultExpiration: 86400
+  expireMap:
+    user: 300
+    smsCode: 90

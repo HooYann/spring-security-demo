@@ -1,8 +1,14 @@
-package com.example.demo.mode1.config;
+package com.example.demo.mode1.connect;
 
 import com.example.demo.mode1.biz.user.service.UserSocialService;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.social.connect.*;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,12 +19,10 @@ public class CustomizedUsersConnectRepository implements UsersConnectionReposito
     @Autowired
     private UserSocialService userSocialService;
 
-    private final ConnectionFactoryLocator connectionFactoryLocator;
+    @Setter
     private ConnectionSignUp connectionSignUp;
-
-    public CustomizedUsersConnectRepository(ConnectionFactoryLocator connectionFactoryLocator) {
-        this.connectionFactoryLocator = connectionFactoryLocator;
-    }
+    @Setter
+    private ConnectionFactoryLocator connectionFactoryLocator;
 
     @Override
     public List<String> findUserIdsWithConnection(Connection<?> connection) {
@@ -46,6 +50,9 @@ public class CustomizedUsersConnectRepository implements UsersConnectionReposito
 
     @Override
     public ConnectionRepository createConnectionRepository(String userId) {
-        return null;
+        if (userId == null) {
+            throw new IllegalArgumentException("userId cannot be null");
+        }
+        return new CustomizedConnectionRepository(userId, userSocialService, this.connectionFactoryLocator);
     }
 }

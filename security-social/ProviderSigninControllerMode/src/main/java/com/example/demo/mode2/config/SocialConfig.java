@@ -39,13 +39,13 @@ public class SocialConfig extends SocialConfigurerAdapter {
         return new AuthenticationNameUserIdSource();
     }
 
-    @Bean
+    /*@Bean
     public ProviderSignInController providerSignInController(ConnectionFactoryLocator connectionFactoryLocator, UsersConnectionRepository usersConnectionRepository, SimpleSignInAdapter simpleSignInAdapter) {
         ((InMemoryUsersConnectionRepository) usersConnectionRepository).setConnectionSignUp((Connection<?> connection) -> connection.getKey().getProviderUserId());
         ProviderSignInController controller = new ProviderSignInController(connectionFactoryLocator, usersConnectionRepository, simpleSignInAdapter);
         //controller.setApplicationUrl("http://wx.ng.beautybase.cn");
         return controller;
-    }
+    }*/
 
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {

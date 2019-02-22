@@ -21,4 +21,5 @@ public interface UserService {
     UserInfoDTO getInfo(Long id);
 
 
+    User add(User user);
 }

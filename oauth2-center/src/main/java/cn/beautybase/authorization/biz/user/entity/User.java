@@ -15,12 +15,12 @@ import java.util.Collection;
 
 @Data
 @Entity
-@Table(name = "z_user_login")
+@Table(name = "z_user")
 public class User implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
      * 登录账号

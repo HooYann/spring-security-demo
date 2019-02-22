@@ -1,9 +1,10 @@
 package com.example.demo.mode1.config;
 
+import com.example.demo.mode1.biz.user.service.UserSocialService;
+import com.example.demo.mode1.connect.CustomizedConnectionSignUp;
 import com.example.demo.mode1.connect.CustomizedUsersConnectRepository;
 import com.example.demo.mode1.github.connect.GitHubConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,10 +13,9 @@ import org.springframework.social.UserIdSource;
 import org.springframework.social.config.annotation.ConnectionFactoryConfigurer;
 import org.springframework.social.config.annotation.EnableSocial;
 import org.springframework.social.config.annotation.SocialConfigurerAdapter;
-import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.social.connect.ConnectionFactoryLocator;
+import org.springframework.social.connect.ConnectionSignUp;
 import org.springframework.social.connect.UsersConnectionRepository;
-import org.springframework.social.connect.mem.InMemoryUsersConnectionRepository;
 import org.springframework.social.connect.web.ProviderSignInUtils;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.security.SpringSocialConfigurer;
@@ -58,7 +58,15 @@ public class SocialConfig extends SocialConfigurerAdapter {
     @Override
     public UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator connectionFactoryLocator) {
         //return new InMemoryUsersConnectionRepository(connectionFactoryLocator);
-        return new CustomizedUsersConnectRepository(connectionFactoryLocator);
+        CustomizedUsersConnectRepository repository = new CustomizedUsersConnectRepository();
+        repository.setConnectionFactoryLocator(connectionFactoryLocator);
+        repository.setConnectionSignUp(connectionSignUp());
+        return repository;
+    }
+
+    @Bean
+    public ConnectionSignUp connectionSignUp() {
+        return new CustomizedConnectionSignUp();
     }
 
 }

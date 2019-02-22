@@ -37,12 +37,16 @@ public class SmsCodeServiceImpl implements SmsCodeService {
     }
 
     private static String createCode() {
-        return String.format("%06d", nextInt(), nextInt());
+        return String.format("%06d", nextInt());
     }
 
     private static int nextInt() {
         Random random = new Random();
         return random.nextInt(999999) + 1;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(createCode());
     }
 
 

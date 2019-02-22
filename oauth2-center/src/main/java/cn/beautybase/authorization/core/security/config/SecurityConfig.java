@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.core.oauth2.config;
+package cn.beautybase.authorization.core.security.config;
 
 import cn.beautybase.authorization.biz.common.service.SmsCodeService;
 import cn.beautybase.authorization.core.security.authentication.smscode.SmsCodeAuthenticationProvider;
@@ -35,13 +35,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest()
                     .and()
                 .authorizeRequests()
-                    .mvcMatchers("/.well-know/jwks.json").permitAll()
+                    .mvcMatchers("/.well-know/jwks.json", "/signin/**", "signup/**").permitAll()
                     .antMatchers("/oauth/**").permitAll()
                     .and()
+                //.formLogin()
+                //    .loginPage("/signin").permitAll()
+                    //.loginProcessingUrl("/login/authenticate")//处理表单中自定义的登录URL
+                //.and()
                 .httpBasic()
                     .disable()
                 .exceptionHandling()
-                    .accessDeniedPage("/login?authorization_error=true")
+                    .accessDeniedPage("/signin?authorization_error=true")
                     .and()
                 // TODO: put CSRF protection back into this endpoint
                 .csrf()

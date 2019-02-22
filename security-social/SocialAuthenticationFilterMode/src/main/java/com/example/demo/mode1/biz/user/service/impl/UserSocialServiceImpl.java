@@ -5,7 +5,9 @@ import com.example.demo.mode1.biz.user.entity.UserSocial;
 import com.example.demo.mode1.biz.user.service.UserSocialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +25,31 @@ public class UserSocialServiceImpl implements UserSocialService {
         return userIdList;
     }
 
-    private List<UserSocial> listByProviderIdAndProviderUserId(String providerId, String providerUserId) {
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void add(Long userId, String providerId, String providerUserId) {
+        UserSocial entity = new UserSocial(userId, providerId, providerUserId);
+        entity.setCreateTime(LocalDateTime.now());
+        userSocialDao.save(entity);
+    }
+
+    @Override
+    public List<UserSocial> listByProviderIdAndProviderUserId(String providerId, String providerUserId) {
         return userSocialDao.listByProviderIdAndProviderUserId(providerId, providerUserId);
     }
+
+    @Override
+    public UserSocial getByProviderIdAndProviderUserId(String providerId, String providerUserId) {
+        List<UserSocial> list = this.listByProviderIdAndProviderUserId(providerId, providerUserId);
+        if(list.isEmpty()) {
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
+    public void removeByProviderIdAndProviderUserId(String providerId, String providerUserId) {
+        userSocialDao.deleteByProviderIdAndProviderUserId(providerId, providerUserId);
+    }
+
 }

@@ -12,8 +12,17 @@ import java.time.LocalDateTime;
 public class UserSocial implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    public UserSocial() {}
+
+    public UserSocial(Long aUserId, String aProviderId, String aProviderUserId) {
+        this.userId = aUserId;
+        this.providerId = aProviderId;
+        this.providerUserId = aProviderUserId;
+    }
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
      * 用户ID
