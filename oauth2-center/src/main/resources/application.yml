@@ -2,6 +2,9 @@ server:
   port: 8086
 
 spring:
+  profiles:
+    active: test
+
   jpa:
     show-sql: true
   datasource:
@@ -43,7 +46,10 @@ logging:
       security: debug
       data: debug
 
-
+wechat:
+  miniapp:
+    appid: wx3a64f83d3b7e9fff
+    secret: 0f4bc192bed75951ddf8e9aebb93e13f
 
 
 

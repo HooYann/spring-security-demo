@@ -1,4 +1,4 @@
-package cn.beautybase;
+package cn.beautybase.authorization;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

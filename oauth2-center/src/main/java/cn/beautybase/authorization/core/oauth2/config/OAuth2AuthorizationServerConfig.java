@@ -1,13 +1,16 @@
 package cn.beautybase.authorization.core.oauth2.config;
 
 import cn.beautybase.authorization.core.oauth2.clientdetails.CustomizedClientDetailsService;
-import cn.beautybase.authorization.core.oauth2.provider.ResourceOwnerSmsCodeTokenGranter;
-import cn.beautybase.authorization.core.oauth2.token.CustomizedUserAuthenticationConverter;
+import cn.beautybase.authorization.core.oauth2.provider.token.ResourceOwnerSmsCodeTokenGranter;
+import cn.beautybase.authorization.core.oauth2.provider.token.WechatMiniAppTokenGranter;
+import cn.beautybase.authorization.core.oauth2.provider.token.CustomizedUserAuthenticationConverter;
+import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -56,6 +59,9 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    @Lazy
+    private WxMaService wxMaService;
 
     @Autowired
     private KeyPair keyPair;
@@ -91,16 +97,14 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer config) throws Exception {
+        //设置自己的令牌点
+        //config.pathMapping("/oauth/token", "/oauth2/token");
+
         config.authenticationManager(authenticationManager);
         //refresh_token
         config.userDetailsService(userDetailsService);
-
-        //System.out.println(config.getClientDetailsService().toString());
         config.setClientDetailsService(new CustomizedClientDetailsService());
-        //System.out.println(config.getClientDetailsService().toString());
-
         config.tokenGranter(tokenGranter(config));
-
         config.tokenStore(tokenStore()).accessTokenConverter(accessTokenConverter());
         //下面这个好像没起作用
         //config.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
@@ -135,6 +139,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
             tokenGranters.add(new ResourceOwnerPasswordTokenGranter(this.authenticationManager, tokenServices, clientDetails, requestFactory));
             //添加短信授权者
             tokenGranters.add(new ResourceOwnerSmsCodeTokenGranter(this.authenticationManager, tokenServices, clientDetails, requestFactory));
+            //微信小程序授权者
+            tokenGranters.add(new WechatMiniAppTokenGranter(wxMaService, this.authenticationManager, tokenServices, clientDetails, requestFactory));
         }
         return tokenGranters;
     }

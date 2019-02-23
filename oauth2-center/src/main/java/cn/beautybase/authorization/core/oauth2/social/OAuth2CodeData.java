@@ -9,11 +9,11 @@ public abstract class OAuth2CodeData implements Serializable {
 
     protected String code;
 
-    protected String getCode() {
+    public String getCode() {
         return this.code;
     }
 
-    protected void setCode(String aCode) {
+    public void setCode(String aCode) {
         this.code = aCode;
     }
 

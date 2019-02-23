@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.core.oauth2.provider;
+package cn.beautybase.authorization.core.oauth2.provider.token;
 
 import cn.beautybase.authorization.core.security.authentication.smscode.SmsCodeAuthenticationToken;
 import org.springframework.security.authentication.*;
@@ -19,7 +19,7 @@ public class ResourceOwnerSmsCodeTokenGranter  extends AbstractTokenGranter {
     private final AuthenticationManager authenticationManager;
 
     public ResourceOwnerSmsCodeTokenGranter(AuthenticationManager authenticationManager, AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory) {
-        this(authenticationManager, tokenServices, clientDetailsService, requestFactory, "sms_code");
+        this(authenticationManager, tokenServices, clientDetailsService, requestFactory, GRANT_TYPE);
     }
 
     public ResourceOwnerSmsCodeTokenGranter(AuthenticationManager authenticationManager, AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory, String grantType) {

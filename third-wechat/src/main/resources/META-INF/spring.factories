@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  cn.beautybase.wechat.miniapp.config.WechatMaConfiguration,\
+  cn.beautybase.wechat.miniapp.config.WechatMiniappConfiguration

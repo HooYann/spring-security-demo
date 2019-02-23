@@ -1,5 +1,7 @@
 package cn.beautybase.authorization.biz.base;
 
+import cn.beautybase.authorization.biz.base.ErrorCode;
+
 /**
  * 平台服务层异常，主要是在业务数据或者状态异常时使用
  *

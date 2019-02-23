@@ -1,53 +1,69 @@
-package cn.beautybase.authorization.core.oauth2.social;
+package cn.beautybase.authorization.core.oauth2.social.wechat;
 
 import cn.beautybase.authorization.biz.base.BaseController;
 import cn.beautybase.authorization.biz.base.ErrorCode;
 import cn.beautybase.authorization.biz.base.Result;
+import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
+import cn.binarywang.wx.miniapp.util.crypt.WxMaCryptUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.GenericTypeResolver;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.view.RedirectView;
-
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * 前后端分离，采用jwt，并不像标准的spring social流程
  * 获取code操作交给前端
  */
+@ConditionalOnProperty(name = "wechat.miniapp.appid")
 @RestController
-@RequestMapping({"/signin"})
-public abstract class SocialSignInController extends BaseController {
+@RequestMapping
+public class WechatMiniAppSignInController extends BaseController {
 
-    private static final Log logger = LogFactory.getLog(SocialSignInController.class);
-
-    //社会
+    @Autowired
+    private WxMaService wxMaService;
 
     @RequestMapping(
-            value = {"/{providerId}"},
+            value = {"/signin/wechatminiapp"},
             method = {RequestMethod.POST}
     )
-    public Result<Object> oauth2Callback(@PathVariable String providerId, @RequestBody OAuth2CodeData codeData, NativeWebRequest request) {
+    public Result<Object> oauth2Callback(@RequestBody WechatMiniAppCodeData codeData) {
         try {
             /*OAuth2ConnectionFactory<?> connectionFactory = (OAuth2ConnectionFactory)this.connectionFactoryLocator.getConnectionFactory(providerId);
             Connection<?> connection = this.connectSupport.completeConnection(connectionFactory, request);
             return this.handleSignIn(connection, connectionFactory, request);*/
 
-            if("wechatMiniProgram".equals(providerId)) {
-
+            if(!StringUtils.hasText(codeData.getCode())
+                    || !StringUtils.hasText(codeData.getEncryptedData())
+                    || !StringUtils.hasText(codeData.getIv())) {
+                this.fail(ErrorCode.INTERNAL_SERVER_ERROR.value(), "登录失败，缺少参数");
             }
+
+
+            WxMaJscode2SessionResult session = this.wxMaService.getUserService().getSessionInfo(codeData.getCode());
+
+
+            String userInfoResult = WxMaCryptUtils.decrypt(
+                    session.getSessionKey(),
+                    codeData.getEncryptedData(),
+                    codeData.getIv());
+            //logger.info("onApplicationEvent,userInfoResult=" + userInfoResult);
+            WxMaUserInfo wxMaUserInfo = WxMaUserInfo.fromJson(userInfoResult);
+
 
             return this.succeed(null, null);
         } catch (Exception e) {
-            logger.error("oauth2Callback: ", e);
+            log.info("wechatMiniApp,oauth2Callback,code={},encrypt={},iv={}",
+                    codeData.getCode(),
+                    codeData.getEncryptedData(),
+                    codeData.getIv());
+            log.error("wechatMiniApp,oauth2Callback: ", e);
             return this.fail(ErrorCode.INTERNAL_SERVER_ERROR.value(), "登录失败");
         }
     }

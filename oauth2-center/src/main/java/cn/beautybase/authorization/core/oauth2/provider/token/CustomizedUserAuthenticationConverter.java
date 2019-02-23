@@ -1,4 +1,4 @@
-package cn.beautybase.authorization.core.oauth2.token;
+package cn.beautybase.authorization.core.oauth2.provider.token;
 
 import cn.beautybase.authorization.biz.user.entity.User;
 import cn.beautybase.authorization.core.security.SimpleUser;

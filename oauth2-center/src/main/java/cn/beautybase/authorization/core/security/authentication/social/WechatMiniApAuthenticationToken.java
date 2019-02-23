@@ -5,9 +5,9 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
-public class SocialAuthenticationToken extends AbstractAuthenticationToken {
+public class WechatMiniApAuthenticationToken extends AbstractAuthenticationToken {
 
-    public SocialAuthenticationToken(Collection<? extends GrantedAuthority> authorities) {
+    public WechatMiniApAuthenticationToken(Collection<? extends GrantedAuthority> authorities) {
         super(authorities);
     }
 
