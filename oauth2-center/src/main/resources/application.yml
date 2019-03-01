@@ -49,7 +49,7 @@ logging:
 wechat:
   miniapp:
     appid: wx3a64f83d3b7e9fff
-    secret: 0f4bc192bed75951ddf8e9aebb93e13f
+    secret: d3db1dc25536c4dc18925007969aaa28
 
 
 

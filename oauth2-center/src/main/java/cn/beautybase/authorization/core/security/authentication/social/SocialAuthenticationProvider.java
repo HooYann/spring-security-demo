@@ -6,14 +6,14 @@ import org.springframework.security.core.AuthenticationException;
 
 public class SocialAuthenticationProvider implements AuthenticationProvider {
 
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        return null;
+    public boolean supports(Class<? extends Object> authentication) {
+        return SocialAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
-    @Override
-    public boolean supports(Class<?> aClass) {
-        return false;
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        authentication.setAuthenticated(true);
+        return authentication;
     }
+
 
 }

@@ -135,7 +135,7 @@ public class Client implements ClientDetails {
     @Override
     public Set<String> getAuthorizedGrantTypes() {
         if(StringUtils.hasText(this.grantTypes)) {
-            return new HashSet<>(Arrays.asList(this.grantTypes.split(",")));
+            return new HashSet<>(Arrays.asList(this.grantTypes.trim().split(",")));
         }
         return new HashSet<>();
     }

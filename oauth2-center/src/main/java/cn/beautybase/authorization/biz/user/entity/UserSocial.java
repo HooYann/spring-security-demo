@@ -41,9 +41,21 @@ public class UserSocial implements Serializable {
     private String providerUserId;
 
     /**
-     * 创建时间
+     * 去注册标记
      */
-    @Column(name = "create_time")
-    private LocalDateTime createTime;
+    @Column(name = "sign_up")
+    private Boolean signUp;
+    public Boolean getSignUp() {
+        return this.signUp;
+    }
+    public void setSignUp(Boolean signUp) {
+        this.signUp = signUp;
+    }
+
+
+    @Transient
+    private User user;
+
+
 
 }

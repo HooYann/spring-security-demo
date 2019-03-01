@@ -11,9 +11,9 @@ import java.util.List;
 @Repository
 public interface UserSocialDao extends JpaRepository<UserSocial, Long> {
 
-    @Query("select O from UserSocial O where O.providerId = :providerId and O.providerUserId = :providerUserId")
-    List<UserSocial> listByProviderIdAndProviderUserId(@Param("providerId") String providerId, @Param("providerUserId") String providerUserId);
-
     @Query("delete from UserSocial O where O.providerId = :providerId and O.providerUserId = :providerUserId")
-    void deleteByProviderIdAndProviderUserId(@Param("providerId") String providerId, @Param("providerUserId") String providerUserId);
+    void delete(@Param("providerId") String providerId, @Param("providerUserId") String providerUserId);
+
+    @Query("select O from UserSocial O where O.providerId = :providerId and O.providerUserId = :providerUserId")
+    UserSocial get(@Param("providerId") String providerId, @Param("providerUserId") String providerUserId);
 }

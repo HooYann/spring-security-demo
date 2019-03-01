@@ -4,6 +4,7 @@ import cn.beautybase.authorization.core.oauth2.clientdetails.CustomizedClientDet
 import cn.beautybase.authorization.core.oauth2.provider.token.ResourceOwnerSmsCodeTokenGranter;
 import cn.beautybase.authorization.core.oauth2.provider.token.WechatMiniAppTokenGranter;
 import cn.beautybase.authorization.core.oauth2.provider.token.CustomizedUserAuthenticationConverter;
+import cn.beautybase.authorization.core.security.userdetails.SocialUserDetailsService;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -60,8 +61,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
-    @Lazy
-    private WxMaService wxMaService;
+    private SocialUserDetailsService socialUserDetailsService;
 
     @Autowired
     private KeyPair keyPair;
@@ -125,24 +125,37 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     }
 
     private List<TokenGranter> getTokenGranters(AuthorizationServerEndpointsConfigurer config) {
-        ClientDetailsService clientDetails = config.getClientDetailsService();
+        ClientDetailsService clientDetailsService = config.getClientDetailsService();
         AuthorizationServerTokenServices tokenServices = config.getTokenServices();
         AuthorizationCodeServices authorizationCodeServices = config.getAuthorizationCodeServices();
         OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(config.getClientDetailsService());
         List<TokenGranter> tokenGranters = new ArrayList();
-        tokenGranters.add(new AuthorizationCodeTokenGranter(tokenServices, authorizationCodeServices, clientDetails, requestFactory));
-        tokenGranters.add(new RefreshTokenGranter(tokenServices, clientDetails, requestFactory));
-        ImplicitTokenGranter implicit = new ImplicitTokenGranter(tokenServices, clientDetails, requestFactory);
+        tokenGranters.add(new AuthorizationCodeTokenGranter(tokenServices, authorizationCodeServices, clientDetailsService, requestFactory));
+        tokenGranters.add(new RefreshTokenGranter(tokenServices, clientDetailsService, requestFactory));
+        ImplicitTokenGranter implicit = new ImplicitTokenGranter(tokenServices, clientDetailsService, requestFactory);
         tokenGranters.add(implicit);
-        tokenGranters.add(new ClientCredentialsTokenGranter(tokenServices, clientDetails, requestFactory));
+        tokenGranters.add(new ClientCredentialsTokenGranter(tokenServices, clientDetailsService, requestFactory));
         if (this.authenticationManager != null) {
-            tokenGranters.add(new ResourceOwnerPasswordTokenGranter(this.authenticationManager, tokenServices, clientDetails, requestFactory));
+            tokenGranters.add(new ResourceOwnerPasswordTokenGranter(this.authenticationManager, tokenServices, clientDetailsService, requestFactory));
             //添加短信授权者
-            tokenGranters.add(new ResourceOwnerSmsCodeTokenGranter(this.authenticationManager, tokenServices, clientDetails, requestFactory));
+            tokenGranters.add(new ResourceOwnerSmsCodeTokenGranter(this.authenticationManager, tokenServices, clientDetailsService, requestFactory));
             //微信小程序授权者
-            tokenGranters.add(new WechatMiniAppTokenGranter(wxMaService, this.authenticationManager, tokenServices, clientDetails, requestFactory));
+            WechatMiniAppTokenGranter wechatMiniAppTokenGranter = wechatMiniAppTokenGranter();
+            wechatMiniAppTokenGranter.setTokenServices(tokenServices);
+            wechatMiniAppTokenGranter.setClientDetailsService(clientDetailsService);
+            wechatMiniAppTokenGranter.setRequestFactory(requestFactory);
+            tokenGranters.add(wechatMiniAppTokenGranter);
         }
         return tokenGranters;
+    }
+
+    /**
+     * 微信小程序授权器
+     * @return
+     */
+    @Bean
+    public WechatMiniAppTokenGranter wechatMiniAppTokenGranter() {
+        return new WechatMiniAppTokenGranter(socialUserDetailsService, this.authenticationManager);
     }
 
     @Bean

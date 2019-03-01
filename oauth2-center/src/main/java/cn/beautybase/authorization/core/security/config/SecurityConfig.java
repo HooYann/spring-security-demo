@@ -2,7 +2,10 @@ package cn.beautybase.authorization.core.security.config;
 
 import cn.beautybase.authorization.biz.common.service.SmsCodeService;
 import cn.beautybase.authorization.core.security.authentication.smscode.SmsCodeAuthenticationProvider;
+import cn.beautybase.authorization.core.security.authentication.social.SocialAuthenticationProvider;
+import cn.beautybase.authorization.core.security.userdetails.CustomizedSocialUserDetailsService;
 import cn.beautybase.authorization.core.security.userdetails.CustomizedUserDetailsService;
+import cn.beautybase.authorization.core.security.userdetails.SocialUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,6 +72,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         smsCodeProvider.setUserDetailsService(userDetailsService());
         smsCodeProvider.setSmsCodeService(smsCodeService);
         builder.authenticationProvider(smsCodeProvider);
+        //社会提供者
+        SocialAuthenticationProvider socialAuthenticationProvider = new SocialAuthenticationProvider();
+        builder.authenticationProvider(socialAuthenticationProvider);
     }
 
 
@@ -87,6 +93,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public UserDetailsService userDetailsService() {
         return new CustomizedUserDetailsService();
+    }
+
+    @Bean
+    public SocialUserDetailsService socialUserDetailsService() {
+        return new CustomizedSocialUserDetailsService();
     }
 
 

@@ -95,6 +95,16 @@ public class User implements UserDetails {
     /**    UserDetails  */
 
     @Transient
+    private boolean signUp;
+    public boolean getSignUp() {
+        return this.signUp;
+    }
+    public void setSignUp(boolean signUp) {
+        this.signUp = signUp;
+    }
+
+
+    @Transient
     private Collection<GrantedAuthority> authorities = new ArrayList<>();
 
     @Override

@@ -34,7 +34,12 @@ public class CustomizedUserAuthenticationConverter implements UserAuthentication
         }
 
         //追加用户ID信息
-        response.put("user_id", ((User)authentication.getPrincipal()).getId());
+        User user = (User)authentication.getPrincipal();
+        response.put("user_id", user.getId());
+        //是否需要去注册，针对social登录
+        if(user.getSignUp()) {
+            response.put("sign_up", true);
+        }
 
         return response;
     }
@@ -49,6 +54,9 @@ public class CustomizedUserAuthenticationConverter implements UserAuthentication
         }
         currentUser.setId(((Number)(map.get("user_id"))).longValue());
         currentUser.setUsername((String)map.get("user_name"));
+        if(map.containsKey("sign_up")) {
+            currentUser.setSignUp(true);
+        }
         Collection<? extends GrantedAuthority> authorities = this.getAuthorities(map);
         return new UsernamePasswordAuthenticationToken(currentUser, "N/A", authorities);
     }
