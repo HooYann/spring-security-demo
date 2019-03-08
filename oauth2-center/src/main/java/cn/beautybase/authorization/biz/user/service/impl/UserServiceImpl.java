@@ -108,32 +108,36 @@ public class UserServiceImpl implements UserService {
     public void signUp(SignUpDTO dto) {
         switch(dto.getType()){
             case SignUpType.WECHAT_MINIAPP:
-                signUpFromWechatMiniapp(dto);
+                if(!StringUtils.hasText(dto.getPhoneNumber())) {
+                    throw new ServiceException("请填写手机号");
+                }
+                //对比验证码
+                if(!smsCodeService.check(dto.getPhoneNumber(), dto.getCaptcha())) {
+                    throw new ServiceException("验证码错误");
+                }
+                signUpFromWechatMiniapp(dto.getPhoneNumber());
                 break;
             case SignUpType.WECHAT_MINIAPP_PHONE_NUMBER:
-                signUpFromWechatMiniappPhoneNumber(dto);
+                if(!dto.getExtData().containsKey("jsCode")
+                        || !dto.getExtData().containsKey("encryptedData")
+                        || !dto.getExtData().containsKey("iv")) {
+                    throw new ServiceException("Missing parameters, jsCode=" + dto.getExtData().get("jsCode") + ", encryptedData=" + dto.getExtData().get("encryptedData") + ", iv=" + dto.getExtData().get("iv"));
+                }
+                JSONObject wxMaPhoneInfo = wechatMiniappService.getPhoneInfo(dto.getExtData().get("jsCode"), dto.getExtData().get("encryptedData"), dto.getExtData().get("iv"));
+                signUpFromWechatMiniapp(wxMaPhoneInfo.getString("purePhoneNumber"));
                 break;
             default:
                 throw new ServiceException("不支持的注册类型");
         }
     }
 
-    private void signUpFromWechatMiniapp(SignUpDTO dto) {
-        if(!StringUtils.hasText(dto.getPhoneNumber())) {
-            throw new ServiceException("请填写手机号");
-        }
-        //对比验证码
-        if(!smsCodeService.check(dto.getPhoneNumber(), dto.getCaptcha())) {
-            throw new ServiceException("验证码错误");
-        }
-
-        User phoneUser = this.getByPhoneNumber(dto.getPhoneNumber());
-
+    private void signUpFromWechatMiniapp(String phoneNumber) {
+        User phoneUser = this.getByPhoneNumber(phoneNumber);
         if(phoneUser == null) {
             //如果之前不存在此手机号的用户，将手机号绑定到当前用户
             User currentUser = userDao.findById(SecurityUtils.currentUserId()).get();
             //currentUser.setUsername(dto.getPhoneNumber());
-            currentUser.setPhoneNumber(dto.getPhoneNumber());
+            currentUser.setPhoneNumber(phoneNumber);
             userDao.save(currentUser);
         } else {
             UserSocial userSocial = userSocialService.getByProviderIdAndUserId(SocialProviderID.WECHAT_MINIAPP, SecurityUtils.currentUserId());
@@ -163,50 +167,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void signUpFromWechatMiniappPhoneNumber(SignUpDTO dto) {
-
-        if(!dto.getExtData().containsKey("jsCode")
-                || !dto.getExtData().containsKey("encryptedData")
-                || !dto.getExtData().containsKey("iv")) {
-            throw new ServiceException("Missing parameters, jsCode=" + dto.getExtData().get("jsCode") + ", encryptedData=" + dto.getExtData().get("encryptedData") + ", iv=" + dto.getExtData().get("iv"));
-        }
-        JSONObject wxMaPhoneInfo = wechatMiniappService.getPhoneInfo(dto.getExtData().get("jsCode"), dto.getExtData().get("encryptedData"), dto.getExtData().get("iv"));
-
-        User phoneUser = this.getByPhoneNumber(wxMaPhoneInfo.getString("purePhoneNumber"));
-
-        if(phoneUser == null) {
-            //如果之前不存在此手机号的用户，将手机号绑定到当前用户
-            User currentUser = userDao.findById(SecurityUtils.currentUserId()).get();
-            //currentUser.setUsername(dto.getPhoneNumber());
-            currentUser.setPhoneNumber(dto.getPhoneNumber());
-            userDao.save(currentUser);
-        } else {
-            UserSocial userSocial = userSocialService.getByProviderIdAndUserId(SocialProviderID.WECHAT_MINIAPP, SecurityUtils.currentUserId());
-            if(userSocial == null) {
-                throw new ServiceException("微信小程序未授权");
-            }
-
-            //如果当前用户和手机号用户不是同一个用户
-            if(!phoneUser.getId().equals(SecurityUtils.currentUserId())) {
-                //更新社会关系
-                userSocial.setUserId(phoneUser.getId());
-                userSocial.setSignUp(false);
-                userSocialService.updateById(userSocial);
-                //删除当前用户
-                User currentUser = userDao.findById(SecurityUtils.currentUserId()).get();
-                currentUser.setDeleted(true);
-                userDao.save(currentUser);
-                //更新手机绑定用户
-                if(!StringUtils.hasText(phoneUser.getNickname())) {
-                    phoneUser.setNickname(currentUser.getNickname());
-                }
-                if(StringUtils.hasText(phoneUser.getAvatar())) {
-                    phoneUser.setAvatar(currentUser.getAvatar());
-                }
-                userDao.save(phoneUser);
-            }
-        }
-    }
 
 
 }

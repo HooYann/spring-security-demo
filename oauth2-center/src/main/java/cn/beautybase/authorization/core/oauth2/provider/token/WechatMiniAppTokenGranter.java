@@ -54,7 +54,6 @@ public class WechatMiniAppTokenGranter implements TokenGranter  {
 
     public OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
         try{
-
             Map<String, String> parameters = new LinkedHashMap(tokenRequest.getRequestParameters());
             String jsCode = (String)parameters.get("jsCode");
             String encryptedData = (String)parameters.get("encryptedData");
@@ -66,8 +65,6 @@ public class WechatMiniAppTokenGranter implements TokenGranter  {
                 throw new InvalidRequestException("Missing parameters, jsCode=" + jsCode + ", encryptedData=" + encryptedData + ", iv=" + iv);
             }
 
-
-
             JSONObject wxMaUserInfo = wechatMiniappService.getUserInfo(jsCode, encryptedData, iv);
             UserSocial userSocial = socialUserDetailsService.get(PROVIDER_ID, wxMaUserInfo.getString("openid"));
             if(userSocial == null) {
@@ -75,7 +72,6 @@ public class WechatMiniAppTokenGranter implements TokenGranter  {
                 //user.setUsername(allocateUsername());
                 user.setNickname(wxMaUserInfo.getString("nickName"));
                 user.setSex(getSex(wxMaUserInfo.getString("gender")));
-
                 userSocial = socialUserDetailsService.add(PROVIDER_ID, wxMaUserInfo.getString("openid"), user, true, wxMaUserInfo);
             }
 
