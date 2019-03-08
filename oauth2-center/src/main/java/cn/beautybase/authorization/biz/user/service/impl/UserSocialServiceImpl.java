@@ -18,13 +18,29 @@ public class UserSocialServiceImpl implements UserSocialService {
     private UserSocialDao userSocialDao;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public UserSocial add(UserSocial userSocial) {
+        return userSocialDao.save(userSocial);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateById(UserSocial userSocial) {
+        userSocialDao.save(userSocial);
+    }
+
+    @Override
     public UserSocial get(String providerId, String providerUserId) {
         return userSocialDao.get(providerId, providerUserId);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public UserSocial add(UserSocial userSocial) {
-        return userSocialDao.save(userSocial);
+    public UserSocial getByProviderIdAndUserId(String providerId, Long userId) {
+        return userSocialDao.getByProviderIdAndUserId(providerId, userId);
+    }
+
+    @Override
+    public List<UserSocial> listByUserId(Long userId) {
+        return userSocialDao.listByUserId(userId);
     }
 }

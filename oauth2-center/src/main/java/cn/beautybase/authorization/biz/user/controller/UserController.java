@@ -26,8 +26,8 @@ public class UserController extends BaseController {
 
     @PostMapping(value = "/api/user/signup")
     public Result<UserInfoDTO> signUp(@RequestBody SignUpDTO dto) {
-
-        return null;
+        userService.signUp(dto);
+        return this.succeed();
     }
 
 }

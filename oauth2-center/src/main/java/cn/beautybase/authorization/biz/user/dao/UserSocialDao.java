@@ -16,4 +16,11 @@ public interface UserSocialDao extends JpaRepository<UserSocial, Long> {
 
     @Query("select O from UserSocial O where O.providerId = :providerId and O.providerUserId = :providerUserId")
     UserSocial get(@Param("providerId") String providerId, @Param("providerUserId") String providerUserId);
+
+    @Query("select O from UserSocial O where O.providerId = :providerId and O.userId = :userId")
+    UserSocial getByProviderIdAndUserId(@Param("providerId") String providerId, @Param("userId") Long userId);
+
+    @Query("select O from UserSocial O where O.userId = :userId")
+    List<UserSocial> listByUserId(@Param("userId") Long userId);
+
 }

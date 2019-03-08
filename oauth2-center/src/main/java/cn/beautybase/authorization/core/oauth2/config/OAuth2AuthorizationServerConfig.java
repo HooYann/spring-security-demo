@@ -5,13 +5,11 @@ import cn.beautybase.authorization.core.oauth2.provider.token.ResourceOwnerSmsCo
 import cn.beautybase.authorization.core.oauth2.provider.token.WechatMiniAppTokenGranter;
 import cn.beautybase.authorization.core.oauth2.provider.token.CustomizedUserAuthenticationConverter;
 import cn.beautybase.authorization.core.security.userdetails.SocialUserDetailsService;
-import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

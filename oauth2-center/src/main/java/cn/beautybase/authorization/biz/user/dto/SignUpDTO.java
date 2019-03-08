@@ -66,7 +66,7 @@ public class SignUpDTO implements Serializable {
     /**
      * 额外信息
      */
-    private Map<String, Object> extData = new HashMap<>();
+    private Map<String, String> extData = new HashMap<>();
 
 
 }

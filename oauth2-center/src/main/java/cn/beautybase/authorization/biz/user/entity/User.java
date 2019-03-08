@@ -86,10 +86,10 @@ public class User implements UserDetails {
     @Column
     private String status;
     /**
-     * 删除状态: Y-已删除,N-未删除
+     * 删除状态: 1-已删除,0-未删除
      */
     @Column
-    private String deleted;
+    private Boolean deleted;
 
 
     /**    UserDetails  */

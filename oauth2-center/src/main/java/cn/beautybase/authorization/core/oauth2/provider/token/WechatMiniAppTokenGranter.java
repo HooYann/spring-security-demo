@@ -1,20 +1,12 @@
 package cn.beautybase.authorization.core.oauth2.provider.token;
 
-import cn.beautybase.authorization.biz.base.ErrorCode;
 import cn.beautybase.authorization.biz.base.ServiceException;
 import cn.beautybase.authorization.biz.user.constants.UserSex;
 import cn.beautybase.authorization.biz.user.entity.User;
 import cn.beautybase.authorization.biz.user.entity.UserSocial;
-import cn.beautybase.authorization.biz.user.service.UserService;
-import cn.beautybase.authorization.biz.user.service.UserSocialService;
-import cn.beautybase.authorization.core.security.authentication.smscode.SmsCodeAuthenticationToken;
 import cn.beautybase.authorization.core.security.authentication.social.SocialAuthenticationToken;
-import cn.beautybase.authorization.core.security.userdetails.CustomizedSocialUserDetailsService;
 import cn.beautybase.authorization.core.security.userdetails.SocialUserDetailsService;
-import cn.binarywang.wx.miniapp.api.WxMaService;
-import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import cn.binarywang.wx.miniapp.util.crypt.WxMaCryptUtils;
+import cn.beautybase.authorization.third.wechat.api.WechatMiniappService;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 import org.apache.commons.logging.Log;
@@ -53,7 +45,7 @@ public class WechatMiniAppTokenGranter implements TokenGranter  {
 
     @Autowired
     @Lazy
-    private WxMaService wxMaService;
+    private WechatMiniappService wechatMiniappService;
 
     public WechatMiniAppTokenGranter(SocialUserDetailsService socialUserDetailsService, AuthenticationManager authenticationManager) {
         this.socialUserDetailsService = socialUserDetailsService;
@@ -64,39 +56,27 @@ public class WechatMiniAppTokenGranter implements TokenGranter  {
         try{
 
             Map<String, String> parameters = new LinkedHashMap(tokenRequest.getRequestParameters());
-            String code = (String)parameters.get("code");
+            String jsCode = (String)parameters.get("jsCode");
             String encryptedData = (String)parameters.get("encryptedData");
             String iv = (String)parameters.get("iv");
 
-            if(!StringUtils.hasText(code)
+            if(!StringUtils.hasText(jsCode)
                     || !StringUtils.hasText(encryptedData)
                     || !StringUtils.hasText(iv)) {
-                throw new InvalidRequestException("Missing parameters, code=" + code + ", encryptData=" + encryptedData + ", iv=" + iv);
+                throw new InvalidRequestException("Missing parameters, jsCode=" + jsCode + ", encryptedData=" + encryptedData + ", iv=" + iv);
             }
 
-            WxMaJscode2SessionResult session = wxMaService.getUserService().getSessionInfo(code);
 
-            if(session == null) {
-                throw new ServiceException("微信授权失败");
-            }
 
-            WxMaUserInfo wxMaUserInfo = wxMaService.getUserService().getUserInfo(session.getSessionKey(), encryptedData, iv);
-            UserSocial userSocial = socialUserDetailsService.get(PROVIDER_ID, wxMaUserInfo.getOpenId());
+            JSONObject wxMaUserInfo = wechatMiniappService.getUserInfo(jsCode, encryptedData, iv);
+            UserSocial userSocial = socialUserDetailsService.get(PROVIDER_ID, wxMaUserInfo.getString("openid"));
             if(userSocial == null) {
                 User user = new User();
-                user.setUsername(allocateUsername());
-                user.setNickname(wxMaUserInfo.getNickName());
-                user.setSex(getSex(wxMaUserInfo.getGender()));
+                //user.setUsername(allocateUsername());
+                user.setNickname(wxMaUserInfo.getString("nickName"));
+                user.setSex(getSex(wxMaUserInfo.getString("gender")));
 
-                JSONObject socialData = new JSONObject();
-                socialData.put("unionid", wxMaUserInfo.getUnionId());
-                socialData.put("country", wxMaUserInfo.getCountry());
-                socialData.put("province", wxMaUserInfo.getProvince());
-                socialData.put("city", wxMaUserInfo.getCity());
-                socialData.put("language", wxMaUserInfo.getLanguage());
-                socialData.put("watermark", wxMaUserInfo.getWatermark());
-
-                userSocial = socialUserDetailsService.add(PROVIDER_ID, wxMaUserInfo.getOpenId(), user, true, socialData);
+                userSocial = socialUserDetailsService.add(PROVIDER_ID, wxMaUserInfo.getString("openid"), user, true, wxMaUserInfo);
             }
 
             Authentication userAuth = new SocialAuthenticationToken(userSocial.getUser(), "");
