@@ -18,4 +18,9 @@ public class UserCacheServiceImpl implements UserCacheService {
         return new UserInfoDTO().init(user);
     }
 
+    @Override
+    public void evictInfo(Long id) {
+        //do nothing
+    }
+
 }

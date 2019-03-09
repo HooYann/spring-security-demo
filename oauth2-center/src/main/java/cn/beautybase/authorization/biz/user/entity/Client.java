@@ -88,13 +88,13 @@ public class Client implements ClientDetails {
     /**
      * 创建时间
      */
-    @Column(name = "create_time")
-    private LocalDateTime createTime;
+    @Column(name = "create_at")
+    private LocalDateTime createAt;
     /**
      * 修改时间
      */
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
 
     @Override
     public String getClientId() {

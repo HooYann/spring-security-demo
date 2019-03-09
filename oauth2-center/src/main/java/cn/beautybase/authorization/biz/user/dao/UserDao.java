@@ -19,16 +19,16 @@ public interface UserDao extends JpaRepository<User, Long> {
     //@Query(nativeQuery = true, value = "select * from AUTH_USER where name = :name1  OR name = :name2 ")
     //List<User> findSQL(@Param("name1") String name1, @Param("name2") String name2);
 
-    @Query("select O from User O where O.username = :username and O.deleted =  :deleted ")
+    @Query("select O from User O where O.username = :username and O.deleted = :deleted")
     User getByUsername(@Param("username") String username, @Param("deleted") Boolean deleted);
 
-    @Query("select O from User O where O.phone_number = :phoneNumber and O.deleted =  :deleted ")
+    @Query("select O from User O where O.phoneNumber = :phoneNumber and O.deleted = :deleted")
     User getByPhoneNumber(@Param("phoneNumber") String phoneNumber, @Param("deleted") Boolean deleted);
 
-    @Query("select O from User O where (O.username = :username or O.phoneNumber = :username) and O.deleted =  :deleted ")
+    @Query("select O from User O where (O.username = :username or O.phoneNumber = :username) and O.deleted = :deleted")
     List<User> listByUsernameOrPhoneNumber(@Param("username") String username, @Param("deleted") Boolean deleted);
 
-    @Query("select O from User O where (O.username = :username or O.email = :username) and O.deleted =  :deleted ")
+    @Query("select O from User O where (O.username = :username or O.email = :username) and O.deleted = :deleted")
     List<User> listByUsernameOrEmail(@Param("username") String username, @Param("deleted") Boolean deleted);
 
 

@@ -25,10 +25,9 @@ import org.springframework.util.StringUtils;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Random;
 
 @Data
-public class WechatMiniAppTokenGranter implements TokenGranter  {
+public class WechatMiniappTokenGranter implements TokenGranter  {
 
     public final Log logger = LogFactory.getLog(this.getClass());
 
@@ -41,13 +40,13 @@ public class WechatMiniAppTokenGranter implements TokenGranter  {
     private ClientDetailsService clientDetailsService;
     private OAuth2RequestFactory requestFactory;
 
-    private final Random r = new Random();
+    //private final Random r = new Random();
 
     @Autowired
     @Lazy
     private WechatMiniappService wechatMiniappService;
 
-    public WechatMiniAppTokenGranter(SocialUserDetailsService socialUserDetailsService, AuthenticationManager authenticationManager) {
+    public WechatMiniappTokenGranter(SocialUserDetailsService socialUserDetailsService, AuthenticationManager authenticationManager) {
         this.socialUserDetailsService = socialUserDetailsService;
         this.authenticationManager = authenticationManager;
     }
@@ -66,16 +65,17 @@ public class WechatMiniAppTokenGranter implements TokenGranter  {
             }
 
             JSONObject wxMaUserInfo = wechatMiniappService.getUserInfo(jsCode, encryptedData, iv);
-            UserSocial userSocial = socialUserDetailsService.get(PROVIDER_ID, wxMaUserInfo.getString("openid"));
+            UserSocial userSocial = socialUserDetailsService.get(PROVIDER_ID, wxMaUserInfo.getString("openId"));
             if(userSocial == null) {
                 User user = new User();
                 //user.setUsername(allocateUsername());
                 user.setNickname(wxMaUserInfo.getString("nickName"));
                 user.setSex(getSex(wxMaUserInfo.getString("gender")));
-                userSocial = socialUserDetailsService.add(PROVIDER_ID, wxMaUserInfo.getString("openid"), user, true, wxMaUserInfo);
+                user.setAvatar(wxMaUserInfo.getString("avatarUrl"));
+                userSocial = socialUserDetailsService.add(PROVIDER_ID, wxMaUserInfo.getString("openId"), user, true, wxMaUserInfo);
             }
 
-            Authentication userAuth = new SocialAuthenticationToken(userSocial.getUser(), "");
+            Authentication userAuth = new SocialAuthenticationToken(userSocial.getUser(), "N/A");
             Authentication authentication = this.authenticationManager.authenticate(userAuth);
 
             OAuth2Request storedOAuth2Request = this.getRequestFactory().createOAuth2Request(client, tokenRequest);
@@ -87,9 +87,9 @@ public class WechatMiniAppTokenGranter implements TokenGranter  {
         }
     }
 
-    private String allocateUsername() {
-        return "tmp" + System.currentTimeMillis() + String.format("%03d", r.nextInt(999) + 1);
-    }
+    //private String allocateUsername() {
+    //    return "tmp" + System.currentTimeMillis() + String.format("%03d", r.nextInt(999) + 1);
+    //}
 
     private String getSex(String gender) {
         String sex = UserSex.UNKNOWN;

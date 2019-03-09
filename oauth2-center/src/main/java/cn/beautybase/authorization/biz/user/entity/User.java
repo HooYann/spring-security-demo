@@ -25,7 +25,6 @@ public class User implements UserDetails {
     /**
      * 登录账号
      */
-    @NotNull(message = "用户名不能为空")
     @Column(length = 20)
     private String username;
     /**
@@ -73,13 +72,13 @@ public class User implements UserDetails {
     /**
      * 创建时间
      */
-    @Column(name = "create_time")
-    private LocalDateTime createTime;
+    @Column(name = "create_at")
+    private LocalDateTime createAt;
     /**
      * 修改时间
      */
-    @Column(name = "update_time")
-    private LocalDateTime updateTime;
+    @Column(name = "update_at")
+    private LocalDateTime updateAt;
     /**
      * 用户状态，1：正常，0：禁用，-1锁定
      */

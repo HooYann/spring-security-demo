@@ -1,6 +1,5 @@
 package cn.beautybase.authorization.biz.user.service;
 
-import cn.beautybase.authorization.biz.user.dto.SignUpDTO;
 import cn.beautybase.authorization.biz.user.dto.UserInfoDTO;
 import cn.beautybase.authorization.biz.user.entity.User;
 
@@ -31,25 +30,25 @@ public interface UserService {
      * @param id
      * @return
      */
-    User get(Long id);
+    User get(Long id, boolean inMemory);
 
     /**
-     * 获取用户信息
+     * 获取用户缓存信息
      * @param id
      * @return
      */
     UserInfoDTO getInfo(Long id);
+    /**
+     * 去除用户缓存信息
+     */
+    void evictInfo(Long id);
 
     /**
      * 新增用户
      * @param user
      * @return
      */
-    User add(User user);
+    User save(User user);
 
-    /**
-     * 用户注册
-     * @param dto
-     */
-    void signUp(SignUpDTO dto);
+
 }

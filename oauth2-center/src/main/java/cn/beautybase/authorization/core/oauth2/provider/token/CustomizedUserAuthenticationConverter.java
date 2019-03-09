@@ -17,14 +17,16 @@ import java.util.Map;
  * 参考DefaultUserAuthenticationConverter
  */
 public class CustomizedUserAuthenticationConverter implements UserAuthenticationConverter {
+
     private Collection<? extends GrantedAuthority> defaultAuthorities;
 
     public CustomizedUserAuthenticationConverter() {
+        this.defaultAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
     }
 
-    public void setDefaultAuthorities(String[] defaultAuthorities) {
-        this.defaultAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(StringUtils.arrayToCommaDelimitedString(defaultAuthorities));
-    }
+    //public void setDefaultAuthorities(String[] defaultAuthorities) {
+    //    this.defaultAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList(StringUtils.arrayToCommaDelimitedString(defaultAuthorities));
+    //}
 
     public Map<String, ?> convertUserAuthentication(Authentication authentication) {
         Map<String, Object> response = new LinkedHashMap();

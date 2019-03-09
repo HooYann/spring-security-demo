@@ -1,8 +1,9 @@
 package cn.beautybase.authorization.core.oauth2.config;
 
 import cn.beautybase.authorization.core.oauth2.clientdetails.CustomizedClientDetailsService;
+import cn.beautybase.authorization.core.oauth2.provider.token.AutoReSignInTokenGenerator;
 import cn.beautybase.authorization.core.oauth2.provider.token.ResourceOwnerSmsCodeTokenGranter;
-import cn.beautybase.authorization.core.oauth2.provider.token.WechatMiniAppTokenGranter;
+import cn.beautybase.authorization.core.oauth2.provider.token.WechatMiniappTokenGranter;
 import cn.beautybase.authorization.core.oauth2.provider.token.CustomizedUserAuthenticationConverter;
 import cn.beautybase.authorization.core.security.userdetails.SocialUserDetailsService;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -97,6 +98,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     public void configure(AuthorizationServerEndpointsConfigurer config) throws Exception {
         //设置自己的令牌点
         //config.pathMapping("/oauth/token", "/oauth2/token");
+        config.pathMapping("/oauth/token", "/signin");
 
         config.authenticationManager(authenticationManager);
         //refresh_token
@@ -128,22 +130,31 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         AuthorizationCodeServices authorizationCodeServices = config.getAuthorizationCodeServices();
         OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(config.getClientDetailsService());
         List<TokenGranter> tokenGranters = new ArrayList();
+        //授权码模式
         tokenGranters.add(new AuthorizationCodeTokenGranter(tokenServices, authorizationCodeServices, clientDetailsService, requestFactory));
+        //刷新token
         tokenGranters.add(new RefreshTokenGranter(tokenServices, clientDetailsService, requestFactory));
-        ImplicitTokenGranter implicit = new ImplicitTokenGranter(tokenServices, clientDetailsService, requestFactory);
-        tokenGranters.add(implicit);
+        //隐式模式
+        tokenGranters.add(new ImplicitTokenGranter(tokenServices, clientDetailsService, requestFactory));
+        //客户端模式
         tokenGranters.add(new ClientCredentialsTokenGranter(tokenServices, clientDetailsService, requestFactory));
         if (this.authenticationManager != null) {
+            //密码模式
             tokenGranters.add(new ResourceOwnerPasswordTokenGranter(this.authenticationManager, tokenServices, clientDetailsService, requestFactory));
-            //添加短信授权者
+            //自定义 短信模式
             tokenGranters.add(new ResourceOwnerSmsCodeTokenGranter(this.authenticationManager, tokenServices, clientDetailsService, requestFactory));
-            //微信小程序授权者
-            WechatMiniAppTokenGranter wechatMiniAppTokenGranter = wechatMiniAppTokenGranter();
-            wechatMiniAppTokenGranter.setTokenServices(tokenServices);
-            wechatMiniAppTokenGranter.setClientDetailsService(clientDetailsService);
-            wechatMiniAppTokenGranter.setRequestFactory(requestFactory);
-            tokenGranters.add(wechatMiniAppTokenGranter);
+            //自定义 微信小程序授权模式
+            WechatMiniappTokenGranter WechatMiniappTokenGranter = WechatMiniappTokenGranter();
+            WechatMiniappTokenGranter.setTokenServices(tokenServices);
+            WechatMiniappTokenGranter.setClientDetailsService(clientDetailsService);
+            WechatMiniappTokenGranter.setRequestFactory(requestFactory);
+            tokenGranters.add(WechatMiniappTokenGranter);
         }
+
+        //重新登录token生成器，设置属性tokenServices
+        AutoReSignInTokenGenerator autoReSignInTokenGenerator = autoReSignInTokenGenerator();
+        autoReSignInTokenGenerator.setTokenServices(tokenServices);
+
         return tokenGranters;
     }
 
@@ -152,8 +163,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
      * @return
      */
     @Bean
-    public WechatMiniAppTokenGranter wechatMiniAppTokenGranter() {
-        return new WechatMiniAppTokenGranter(socialUserDetailsService, this.authenticationManager);
+    public WechatMiniappTokenGranter WechatMiniappTokenGranter() {
+        return new WechatMiniappTokenGranter(socialUserDetailsService, this.authenticationManager);
     }
 
     @Bean
@@ -179,6 +190,15 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         converter.setAccessTokenConverter(tokenConverter);
 
         return converter;
+    }
+
+    /**
+     * 重新登录token生成器
+     * @return
+     */
+    @Bean
+    public AutoReSignInTokenGenerator autoReSignInTokenGenerator() {
+        return new AutoReSignInTokenGenerator();
     }
 
 

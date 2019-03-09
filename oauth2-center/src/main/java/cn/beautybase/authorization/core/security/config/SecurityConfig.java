@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest()
                     .and()
                 .authorizeRequests()
-                    .mvcMatchers("/.well-know/jwks.json", "/signin/**", "signup/**").permitAll()
+                    .mvcMatchers("/.well-know/jwks.json", "/signin/**", "/signup/**").permitAll()
                     .antMatchers("/oauth/**").permitAll()
                     .and()
                 //.formLogin()

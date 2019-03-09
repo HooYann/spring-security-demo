@@ -12,7 +12,7 @@ import java.util.Map;
  * @date 2018-03-05
  */
 @Data
-public class SignUpDTO implements Serializable {
+public class SignUpInputDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

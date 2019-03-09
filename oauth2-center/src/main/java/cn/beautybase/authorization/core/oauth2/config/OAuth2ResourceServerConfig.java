@@ -26,6 +26,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         http
                 .authorizeRequests()
                     .antMatchers("/public/**").permitAll()
+                    .antMatchers("/api/user/signup/social").hasAnyAuthority("user", "social_user")
                     .antMatchers("/api/**").hasAuthority("user")
                     .anyRequest().authenticated()
                     .and();

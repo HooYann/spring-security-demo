@@ -11,10 +11,6 @@ public class BaseController {
        return Result.buildSuccess();
     }
 
-    public <T> Result<T> succeed(String msg) {
-        return Result.buildSuccess(msg);
-    }
-
     public <T> Result<T> succeed(T data) {
         return Result.buildSuccess(data);
     }

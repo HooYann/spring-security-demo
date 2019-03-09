@@ -2,7 +2,9 @@ package cn.beautybase.authorization.biz.user.controller;
 
 import cn.beautybase.authorization.biz.base.BaseController;
 import cn.beautybase.authorization.biz.base.Result;
-import cn.beautybase.authorization.biz.user.dto.SignUpDTO;
+import cn.beautybase.authorization.biz.user.dto.SignUpInputDTO;
+import cn.beautybase.authorization.biz.user.dto.SignUpOutputDTO;
+import cn.beautybase.authorization.biz.user.service.SignUpService;
 import cn.beautybase.authorization.core.security.SecurityUtils;
 import cn.beautybase.authorization.biz.user.dto.UserInfoDTO;
 import cn.beautybase.authorization.biz.user.service.UserService;
@@ -17,6 +19,8 @@ public class UserController extends BaseController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private SignUpService signUpService;
 
     @GetMapping(value = "/api/user/info")
     public Result<UserInfoDTO> userInfo() {
@@ -24,10 +28,16 @@ public class UserController extends BaseController {
         return this.succeed(info);
     }
 
-    @PostMapping(value = "/api/user/signup")
-    public Result<UserInfoDTO> signUp(@RequestBody SignUpDTO dto) {
-        userService.signUp(dto);
+    @PostMapping(value = "/signup")
+    public Result<Void> signUp(SignUpInputDTO dto) {
+        SignUpOutputDTO output = signUpService.signUp(dto);
         return this.succeed();
+    }
+
+    @PostMapping(value = "/api/user/signup/social")
+    public Result<String> socialSignUp(@RequestBody SignUpInputDTO dto) {
+        SignUpOutputDTO output = signUpService.socialSignUp(dto);
+        return this.succeed(output.getToken());
     }
 
 }

@@ -19,21 +19,22 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.AlgorithmParameters;
+import java.text.MessageFormat;
 
 @Service
 @Slf4j
 public class WechatMiniappServiceImpl implements WechatMiniappService {
 
-    @Value("$wechat.miniapp.appid}")
+    @Value("${wechat.miniapp.appid}")
     private String appid;
-    @Value("$wechat.miniapp.secret}")
+    @Value("${wechat.miniapp.secret}")
     private String secret;
 
     @Override
     public JSONObject getSessionInfo(String jsCode) {
 
         String url = "https://api.weixin.qq.com/sns/jscode2session?appid={0}&secret={1}&js_code={2}&grant_type=authorization_cde";
-        url = String.format(url, appid, secret, jsCode);
+        url = MessageFormat.format(url, appid, secret, jsCode);
 
         RestTemplate template = new RestTemplate();
 
@@ -55,7 +56,7 @@ public class WechatMiniappServiceImpl implements WechatMiniappService {
     @Override
     public JSONObject getUserInfo(String jsCode, String encryptedData, String iv) {
         JSONObject userInfo = this.decrypt2Info(jsCode, encryptedData, iv);
-        if(!StringUtils.hasText(userInfo.getString("openid"))) {
+        if(!StringUtils.hasText(userInfo.getString("openId"))) {
             throw new ServiceException("获取微信小程序用户信息失败");
         }
         return userInfo;

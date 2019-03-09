@@ -27,7 +27,7 @@ public class CustomizedSocialUserDetailsService implements SocialUserDetailsServ
         if(userSocial == null) {
             return null;
         }
-        User user = userService.get(userSocial.getUserId());
+        User user = userService.get(userSocial.getUserId(), false);
         user.setSignUp(userSocial.getSignUp());
         userSocial.setUser(user);
         return userSocial;
@@ -36,7 +36,7 @@ public class CustomizedSocialUserDetailsService implements SocialUserDetailsServ
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserSocial add(String providerId, String providerUserId, User user, boolean signUp, JSONObject socialExtData) {
-        user = userService.add(user);
+        user = userService.save(user);
 
         UserSocial userSocial = new UserSocial();
         userSocial.setUserId(user.getId());
