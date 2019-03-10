@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: test
+    active: dev
 
   jpa:
     show-sql: true
@@ -39,12 +39,6 @@ cache:
   expireMap:
     user: 300
     smsCode: 90
-
-logging:
-  level:
-    org.springframework:
-      security: debug
-      data: debug
 
 wechat:
   miniapp:
