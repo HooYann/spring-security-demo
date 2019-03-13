@@ -41,9 +41,9 @@ cache:
     smsCode: 90
 
 wechat:
-  miniapp:
-    appid: wx3a64f83d3b7e9fff
-    secret: d3db1dc25536c4dc18925007969aaa28
+  miniapp: #微信小程序
+    appid: 你的appid
+    secret: 你的secret
 
 
 
