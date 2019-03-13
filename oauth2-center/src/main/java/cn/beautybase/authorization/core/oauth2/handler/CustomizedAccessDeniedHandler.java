@@ -5,6 +5,7 @@ import cn.beautybase.authorization.biz.base.Result;
 import cn.beautybase.authorization.core.security.SecurityUser;
 import cn.beautybase.authorization.core.security.SecurityUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -21,6 +22,7 @@ public class CustomizedAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
         SecurityUser currentUser = SecurityUtils.currentUser();
+        response.setStatus(HttpStatus.OK.value());
         response.setContentType("application/json;charset=UTF-8");
         if(currentUser != null && isSocialUser(currentUser.getAuthorities())) {
             response.getWriter().write(objectMapper.writeValueAsString(Result.buildFailure(ErrorCode.NOT_SIGN_UP.value(), ErrorCode.NOT_SIGN_UP.message())));

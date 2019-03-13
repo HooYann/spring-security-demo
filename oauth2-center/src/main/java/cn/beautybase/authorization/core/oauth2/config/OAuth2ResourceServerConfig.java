@@ -1,6 +1,7 @@
 package cn.beautybase.authorization.core.oauth2.config;
 
 import cn.beautybase.authorization.core.oauth2.handler.CustomizedAccessDeniedHandler;
+import cn.beautybase.authorization.core.oauth2.handler.CustomizedOAuth2AuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,11 +28,10 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         http
                 .authorizeRequests()
                     .antMatchers("/public/**", "/signin/**", "/signup/**").permitAll()
-                    .antMatchers("/api/user/signup/social").hasAnyAuthority("social_user")
+                    .antMatchers("/api/user/signup/social").hasAuthority("social_user")
                     .antMatchers("/api/**").hasAuthority("user")
                     .anyRequest().authenticated()
-                    .and()
-                .exceptionHandling().accessDeniedHandler(new CustomizedAccessDeniedHandler());
+                    .and();
     }
 
     @Override
@@ -39,6 +39,8 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
         resourceConfig.resourceId(RESOURCE_ID).stateless(true);
         //resourceConfig.tokenExtractor();
         //resourceConfig.tokenStore(tokenStore());
+        resourceConfig.accessDeniedHandler(new CustomizedAccessDeniedHandler());
+        resourceConfig.authenticationEntryPoint(new CustomizedOAuth2AuthenticationEntryPoint());
         resourceConfig.tokenStore(tokenStore);
     }
 

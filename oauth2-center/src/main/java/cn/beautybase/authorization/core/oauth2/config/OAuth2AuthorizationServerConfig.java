@@ -1,6 +1,7 @@
 package cn.beautybase.authorization.core.oauth2.config;
 
 import cn.beautybase.authorization.core.oauth2.clientdetails.CustomizedClientDetailsService;
+import cn.beautybase.authorization.core.oauth2.handler.CustomizedOAuth2AuthenticationEntryPoint;
 import cn.beautybase.authorization.core.oauth2.provider.token.*;
 import cn.beautybase.authorization.core.security.userdetails.SocialUserDetailsService;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -68,6 +69,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer config) throws Exception {
+
+        config.authenticationEntryPoint(new CustomizedOAuth2AuthenticationEntryPoint());
         config.passwordEncoder(passwordEncoder);
 
         config.tokenKeyAccess("isAuthenticated()");
