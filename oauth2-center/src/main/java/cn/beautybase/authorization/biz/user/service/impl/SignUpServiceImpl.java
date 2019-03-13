@@ -133,6 +133,9 @@ public class SignUpServiceImpl implements SignUpService {
             result.setUser(phoneUser);
         }
         Client client = clientService.getByClientId(SocialProviderID.WECHAT_MINIAPP);
+        if(client == null) {
+            throw new ServiceException("客户端不存在client_id=" + SocialProviderID.WECHAT_MINIAPP);
+        }
         Authentication authentication = new SocialAuthenticationToken(result.getUser(), "N/A", result.getUser().getAuthorities());
         String token = autoReSignInTokenGenerator.getAccessToken(client, "user", SocialProviderID.WECHAT_MINIAPP, authentication).getValue();
         result.setToken(token);

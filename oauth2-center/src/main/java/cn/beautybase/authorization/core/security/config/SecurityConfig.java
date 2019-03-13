@@ -58,7 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-        //web.ignoring().mvcMatchers("/oauth/check_token");
+        //浏览器默认会请求网站图标，直接放行
+        web.ignoring().mvcMatchers("/favicon.ico");
     }
 
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
