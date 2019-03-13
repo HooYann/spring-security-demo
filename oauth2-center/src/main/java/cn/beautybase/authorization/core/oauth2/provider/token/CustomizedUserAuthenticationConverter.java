@@ -1,7 +1,7 @@
 package cn.beautybase.authorization.core.oauth2.provider.token;
 
 import cn.beautybase.authorization.biz.user.entity.User;
-import cn.beautybase.authorization.core.security.SimpleUser;
+import cn.beautybase.authorization.core.security.SecurityUser;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,16 +38,12 @@ public class CustomizedUserAuthenticationConverter implements UserAuthentication
         //追加用户ID信息
         User user = (User)authentication.getPrincipal();
         response.put("user_id", user.getId());
-        //是否需要去注册，针对social登录
-        if(user.getSignUp()) {
-            response.put("sign_up", true);
-        }
 
         return response;
     }
 
     public Authentication extractAuthentication(Map<String, ?> map) {
-        SimpleUser currentUser = new SimpleUser();
+        SecurityUser currentUser = new SecurityUser();
         if(!map.containsKey("user_id")) {
             return null;
         }
@@ -56,10 +52,10 @@ public class CustomizedUserAuthenticationConverter implements UserAuthentication
         }
         currentUser.setId(((Number)(map.get("user_id"))).longValue());
         currentUser.setUsername((String)map.get("user_name"));
-        if(map.containsKey("sign_up")) {
-            currentUser.setSignUp(true);
-        }
+
         Collection<? extends GrantedAuthority> authorities = this.getAuthorities(map);
+        currentUser.setAuthorities(authorities);
+
         return new UsernamePasswordAuthenticationToken(currentUser, "N/A", authorities);
     }
 

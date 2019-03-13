@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public class SecurityUtils {
 
     public static Long currentUserId() {
-        SimpleUser user = currentUser();
+        SecurityUser user = currentUser();
         if(user == null) {
             return null;
         }
@@ -16,15 +16,15 @@ public class SecurityUtils {
     }
 
     public static String currentUsername() {
-        SimpleUser user = currentUser();
+        SecurityUser user = currentUser();
         if(user == null) {
             return null;
         }
         return user.getUsername();
     }
 
-    private static SimpleUser currentUser() {
-        return currentUser(SimpleUser.class);
+    private static SecurityUser currentUser() {
+        return currentUser(SecurityUser.class);
     }
 
     private static <T> T currentUser(Class<T> clazz) {

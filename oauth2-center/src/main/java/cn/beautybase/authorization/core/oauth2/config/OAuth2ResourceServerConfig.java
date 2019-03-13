@@ -25,7 +25,7 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
     public void configure(HttpSecurity http) throws  Exception {
         http
                 .authorizeRequests()
-                    .antMatchers("/public/**").permitAll()
+                    .antMatchers("/public/**", "/signin/**", "/signup/**").permitAll()
                     .antMatchers("/api/user/signup/social").hasAnyAuthority("user", "social_user")
                     .antMatchers("/api/**").hasAuthority("user")
                     .anyRequest().authenticated()

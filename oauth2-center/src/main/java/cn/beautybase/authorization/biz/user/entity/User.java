@@ -3,6 +3,7 @@ package cn.beautybase.authorization.biz.user.entity;
 import cn.beautybase.authorization.biz.user.constants.UserStatus;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -94,23 +95,10 @@ public class User implements UserDetails {
     /**    UserDetails  */
 
     @Transient
-    private boolean signUp;
-    public boolean getSignUp() {
-        return this.signUp;
-    }
-    public void setSignUp(boolean signUp) {
-        this.signUp = signUp;
-    }
-
-
-    @Transient
-    private Collection<GrantedAuthority> authorities = new ArrayList<>();
+    private Collection<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList("user");
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(authorities.size() == 0) {
-            authorities.add(new SimpleGrantedAuthority("user"));
-        }
         return authorities;
     }
 

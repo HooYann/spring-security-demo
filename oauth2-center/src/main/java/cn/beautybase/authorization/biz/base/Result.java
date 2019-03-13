@@ -31,9 +31,6 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> buildSuccess() {
         return buildSuccess(MSG_EMPTY, null);
     }
-    public static <T> Result<T> buildSuccess(String msg) {
-        return buildSuccess(msg, null);
-    }
     public static <T> Result<T> buildSuccess(T data) {
         return buildSuccess(MSG_EMPTY, data);
     }

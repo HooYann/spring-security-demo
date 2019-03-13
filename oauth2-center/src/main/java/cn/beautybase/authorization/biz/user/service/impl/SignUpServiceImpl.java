@@ -25,6 +25,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 @Service
@@ -55,6 +56,7 @@ public class SignUpServiceImpl implements SignUpService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public SignUpOutputDTO socialSignUp(SignUpInputDTO dto) {
         SignUpOutputDTO result = null;
         if(!StringUtils.hasText(dto.getType())) {

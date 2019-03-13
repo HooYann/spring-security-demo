@@ -1,10 +1,7 @@
 package cn.beautybase.authorization.core.oauth2.config;
 
 import cn.beautybase.authorization.core.oauth2.clientdetails.CustomizedClientDetailsService;
-import cn.beautybase.authorization.core.oauth2.provider.token.AutoReSignInTokenGenerator;
-import cn.beautybase.authorization.core.oauth2.provider.token.ResourceOwnerSmsCodeTokenGranter;
-import cn.beautybase.authorization.core.oauth2.provider.token.WechatMiniappTokenGranter;
-import cn.beautybase.authorization.core.oauth2.provider.token.CustomizedUserAuthenticationConverter;
+import cn.beautybase.authorization.core.oauth2.provider.token.*;
 import cn.beautybase.authorization.core.security.userdetails.SocialUserDetailsService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -12,15 +9,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.*;
+import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
@@ -61,13 +60,15 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     private UserDetailsService userDetailsService;
     @Autowired
     private SocialUserDetailsService socialUserDetailsService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private KeyPair keyPair;
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer config) throws Exception {
-        config.passwordEncoder(new BCryptPasswordEncoder());
+        config.passwordEncoder(passwordEncoder);
 
         config.tokenKeyAccess("isAuthenticated()");
         config.checkTokenAccess("permitAll()");
@@ -98,30 +99,25 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     public void configure(AuthorizationServerEndpointsConfigurer config) throws Exception {
         //设置自己的令牌点
         //config.pathMapping("/oauth/token", "/oauth2/token");
-        config.pathMapping("/oauth/token", "/signin");
+        //config.pathMapping("/oauth/token", "/signin");
 
         config.authenticationManager(authenticationManager);
         //refresh_token
         config.userDetailsService(userDetailsService);
         config.setClientDetailsService(new CustomizedClientDetailsService());
-        config.tokenGranter(tokenGranter(config));
+
+        CustomizedTokenGranter tokenGranter = tokenGranter();
+        tokenGranter.setDelegate(new CompositeTokenGranter(getTokenGranters(config)));
+        config.tokenGranter(tokenGranter);
+
         config.tokenStore(tokenStore()).accessTokenConverter(accessTokenConverter());
         //下面这个好像没起作用
         //config.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }
 
-    private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer config) {
-        return new TokenGranter() {
-            private CompositeTokenGranter delegate;
-
-            public OAuth2AccessToken grant(String grantType, TokenRequest tokenRequest) {
-                if (this.delegate == null) {
-                    this.delegate = new CompositeTokenGranter(getTokenGranters(config));
-                }
-
-                return this.delegate.grant(grantType, tokenRequest);
-            }
-        };
+    @Bean
+    public CustomizedTokenGranter tokenGranter() {
+        return new CustomizedTokenGranter();
     }
 
     private List<TokenGranter> getTokenGranters(AuthorizationServerEndpointsConfigurer config) {
@@ -144,11 +140,11 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
             //自定义 短信模式
             tokenGranters.add(new ResourceOwnerSmsCodeTokenGranter(this.authenticationManager, tokenServices, clientDetailsService, requestFactory));
             //自定义 微信小程序授权模式
-            WechatMiniappTokenGranter WechatMiniappTokenGranter = WechatMiniappTokenGranter();
-            WechatMiniappTokenGranter.setTokenServices(tokenServices);
-            WechatMiniappTokenGranter.setClientDetailsService(clientDetailsService);
-            WechatMiniappTokenGranter.setRequestFactory(requestFactory);
-            tokenGranters.add(WechatMiniappTokenGranter);
+            WechatMiniappTokenGranter wechatMiniappTokenGranter = wechatMiniappTokenGranter();
+            wechatMiniappTokenGranter.setTokenServices(tokenServices);
+            wechatMiniappTokenGranter.setClientDetailsService(clientDetailsService);
+            wechatMiniappTokenGranter.setRequestFactory(requestFactory);
+            tokenGranters.add(wechatMiniappTokenGranter);
         }
 
         //重新登录token生成器，设置属性tokenServices
@@ -163,7 +159,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
      * @return
      */
     @Bean
-    public WechatMiniappTokenGranter WechatMiniappTokenGranter() {
+    public WechatMiniappTokenGranter wechatMiniappTokenGranter() {
         return new WechatMiniappTokenGranter(socialUserDetailsService, this.authenticationManager);
     }
 

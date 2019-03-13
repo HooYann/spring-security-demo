@@ -9,6 +9,7 @@ import cn.beautybase.authorization.biz.user.service.UserSocialService;
 import com.alibaba.fastjson.JSONObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
@@ -28,7 +29,9 @@ public class CustomizedSocialUserDetailsService implements SocialUserDetailsServ
             return null;
         }
         User user = userService.get(userSocial.getUserId(), false);
-        user.setSignUp(userSocial.getSignUp());
+        if(userSocial.getSignUp()) {
+            user.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList("social_user"));
+        }
         userSocial.setUser(user);
         return userSocial;
     }
@@ -50,7 +53,8 @@ public class CustomizedSocialUserDetailsService implements SocialUserDetailsServ
         userSocialData.setExtData(socialExtData.toString());
         userSocialDataService.add(userSocialData);
 
-        user.setSignUp(signUp);
+        //首次添加，角色还是social_user。直到绑定完手机号或者其他业务要求
+        user.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList("social_user"));
         userSocial.setUser(user);
 
         return userSocial;

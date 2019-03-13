@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 @Component
 @Aspect
@@ -17,7 +18,7 @@ public class ControllerAspect {
     }
 
     @Around("handleControllerMethod()")
-    public Object a(ProceedingJoinPoint pjp) {
+    public Object handle(ProceedingJoinPoint pjp) {
         long startTime = System.currentTimeMillis();
 
         Result<?> result;
@@ -25,6 +26,7 @@ public class ControllerAspect {
             result = (Result<?>) pjp.proceed();
             log.info(pjp.getSignature() + "use time:" + (System.currentTimeMillis() - startTime));
         } catch (Throwable e) {
+            log.error(e.getMessage());
             result = handlerException(pjp, e);
         }
         return result;
@@ -34,9 +36,12 @@ public class ControllerAspect {
 
         if(e instanceof ServiceException) {
             ServiceException se = (ServiceException)e;
+            if(se.getCode() == null) {
+                return Result.buildFailure(ErrorCode.SERVICE_EXCEPTION.value(), se.getMessage());
+            }
             return Result.buildFailure(se.getCode(), se.getMessage());
         } else {
-            return Result.buildFailure(e);
+            return Result.buildFailure(ErrorCode.INTERNAL_SERVER_ERROR.value(), e.getMessage());
         }
 
     }

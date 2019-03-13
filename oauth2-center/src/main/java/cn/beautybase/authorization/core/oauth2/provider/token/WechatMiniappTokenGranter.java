@@ -54,14 +54,14 @@ public class WechatMiniappTokenGranter implements TokenGranter  {
     public OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {
         try{
             Map<String, String> parameters = new LinkedHashMap(tokenRequest.getRequestParameters());
-            String jsCode = (String)parameters.get("jsCode");
-            String encryptedData = (String)parameters.get("encryptedData");
+            String jsCode = (String)parameters.get("js_code");
+            String encryptedData = (String)parameters.get("encrypted_data");
             String iv = (String)parameters.get("iv");
 
             if(!StringUtils.hasText(jsCode)
                     || !StringUtils.hasText(encryptedData)
                     || !StringUtils.hasText(iv)) {
-                throw new InvalidRequestException("Missing parameters, jsCode=" + jsCode + ", encryptedData=" + encryptedData + ", iv=" + iv);
+                throw new InvalidRequestException("Missing parameters, js_code=" + jsCode + ", encrypted_data=" + encryptedData + ", iv=" + iv);
             }
 
             JSONObject wxMaUserInfo = wechatMiniappService.getUserInfo(jsCode, encryptedData, iv);
