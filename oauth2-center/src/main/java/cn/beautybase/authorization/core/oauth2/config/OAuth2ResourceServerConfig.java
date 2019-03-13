@@ -1,5 +1,6 @@
 package cn.beautybase.authorization.core.oauth2.config;
 
+import cn.beautybase.authorization.core.oauth2.handler.CustomizedAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,7 +30,8 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
                     .antMatchers("/api/user/signup/social").hasAnyAuthority("user", "social_user")
                     .antMatchers("/api/**").hasAuthority("user")
                     .anyRequest().authenticated()
-                    .and();
+                    .and()
+                .exceptionHandling().accessDeniedHandler(new CustomizedAccessDeniedHandler());
     }
 
     @Override

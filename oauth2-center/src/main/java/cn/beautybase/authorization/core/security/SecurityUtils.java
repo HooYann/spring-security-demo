@@ -23,7 +23,7 @@ public class SecurityUtils {
         return user.getUsername();
     }
 
-    private static SecurityUser currentUser() {
+    public static SecurityUser currentUser() {
         return currentUser(SecurityUser.class);
     }
 

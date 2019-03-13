@@ -43,11 +43,14 @@ public enum ErrorCode {
      * 权限不足
      */
     UNAUTHORIZED(10008, "权限不足"),
-
     /**
      * 错误的请求
      */
-    METHOD_NOT_ALLOWED(10009, "不支持的方法");
+    METHOD_NOT_ALLOWED(10009, "不支持的方法"),
+    /**
+     * 未完成注册
+     */
+    NOT_SIGN_UP(10010, "未完成注册");
 
     private final int value;
 
@@ -70,7 +73,7 @@ public enum ErrorCode {
     /**
      * Return the reason phrase of this status code.
      */
-    public String getMessage() {
+    public String message() {
         return this.message;
     }
 
