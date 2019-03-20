@@ -8,9 +8,9 @@ spring:
   jpa:
     show-sql: true
   datasource:
-    url: jdbc:mysql://localhost:3306/wface_finance?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
-    username: root
-    password: 123456
+    url: jdbc:mysql://beautybase-dm.mysql.rds.aliyuncs.com:3306/wface_finance?autoReconnect=true&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+    username: dev
+    password: Meijigongfang2018
     driver-class-name: com.mysql.jdbc.Driver
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
@@ -41,9 +41,9 @@ cache:
     smsCode: 90
 
 wechat:
-  miniapp: #微信小程序
-    appid: 你的appid
-    secret: 你的secret
+  miniapp:
+    appid: wx3a64f83d3b7e9fff
+    secret: d3db1dc25536c4dc18925007969aaa28
 
 
 
