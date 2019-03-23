@@ -14,6 +14,8 @@ public class JwtAuthorizationApplication {
 		SpringApplication.run(JwtAuthorizationApplication.class, args);
 	}
 
+	//demo
+
 	AuthorizationEndpoint authorizationEndpoint;
 
 	TokenEndpoint tokenEndpoint;
