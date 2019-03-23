@@ -56,7 +56,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
-    KeyPair keyPair;
+    //KeyPair keyPair;
 
     public OAuth2AuthorizationServerConfig(
             AuthenticationConfiguration authenticationConfiguration,

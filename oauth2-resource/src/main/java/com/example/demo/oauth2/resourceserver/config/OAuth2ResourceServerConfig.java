@@ -1,8 +1,10 @@
 package com.example.demo.oauth2.resourceserver.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,8 +17,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoderJwkSupport;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+import org.springframework.security.oauth2.provider.token.store.redis.RedisTokenStore;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
@@ -24,6 +28,9 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
     private static final String RESOURCE_ID_TEST = "resource_id_test";
+
+    @Autowired
+    private RedisConnectionFactory redisConnectionFactory;
 
     @Override
     public void configure(HttpSecurity http) throws  Exception {
@@ -42,8 +49,9 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
     }
 
     @Bean
-    public JwtTokenStore tokenStore() {
-        return new JwtTokenStore(accessTokenConverter());
+    public TokenStore tokenStore() {
+        return new RedisTokenStore(redisConnectionFactory);
+        //return new JwtTokenStore(accessTokenConverter());
     }
 
     @Bean

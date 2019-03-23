@@ -8,6 +8,17 @@ spring:
         jwt:
           jwk-set-uri: localhost:8087/.well-known/jwks.json
 
+  redis:
+    host: redis.mjgf.io
+    port: 6379
+    database: 4
+    lettuce:
+      pool:
+        min-idle: 10
+        max-wait: 5000ms
+        max-idle: 50
+        max-active: 100
+
 logging:
   level:
     org.springframework:
