@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
             return list.get(0);
         } else if(PhoneNumberUtils.match(username)) {
             //如果是手机号，username=username or phone_number=username
-            List<User> list = userDao.listByUsernameOrPhoneNumber(username, true);
+            List<User> list = userDao.listByUsernameOrPhoneNumber(username, false);
             if(list.isEmpty()) {
                 return null;
             }

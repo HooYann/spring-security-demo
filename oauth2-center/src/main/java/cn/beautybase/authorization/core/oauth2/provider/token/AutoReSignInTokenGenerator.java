@@ -18,8 +18,11 @@ public class AutoReSignInTokenGenerator {
 
     public final Log logger = LogFactory.getLog(this.getClass());
 
-    @Setter
     private AuthorizationServerTokenServices tokenServices;
+
+    public AutoReSignInTokenGenerator(AuthorizationServerTokenServices tokenServices) {
+        this.tokenServices = tokenServices;
+    }
 
     public OAuth2AccessToken getAccessToken(ClientDetails client, String scopes, String grantType, Authentication authentication) {
         OAuth2Authentication oAuth2Authentication = this.getOAuth2Authentication(client, scopes, grantType, authentication);

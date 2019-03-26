@@ -24,6 +24,7 @@ import org.springframework.security.oauth2.provider.client.ClientCredentialsToke
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeTokenGranter;
+import org.springframework.security.oauth2.provider.code.InMemoryAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.endpoint.FrameworkEndpoint;
 import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
@@ -43,6 +44,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -95,7 +97,7 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
                 .redirectUris("http://localhost:8088")
                 //.authorities("oauth2")
                 .autoApprove(true);*/
-        config.withClientDetails(new CustomizedClientDetailsService());
+        config.withClientDetails(clientDetailsService());
     }
 
     @Override
@@ -107,11 +109,11 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
         config.authenticationManager(authenticationManager);
         //refresh_token
         config.userDetailsService(userDetailsService);
-        config.setClientDetailsService(new CustomizedClientDetailsService());
+        config.setClientDetailsService(clientDetailsService());
 
-        CustomizedTokenGranter tokenGranter = tokenGranter();
-        tokenGranter.setDelegate(new CompositeTokenGranter(getTokenGranters(config)));
-        config.tokenGranter(tokenGranter);
+        //CustomizedTokenGranter tokenGranter = tokenGranter();
+        //tokenGranter.setDelegate(new CompositeTokenGranter(getTokenGranters(config)));
+        config.tokenGranter(tokenGranter());
 
         config.tokenStore(tokenStore()).accessTokenConverter(accessTokenConverter());
         //下面这个好像没起作用
@@ -119,51 +121,47 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     }
 
     @Bean
-    public CustomizedTokenGranter tokenGranter() {
-        return new CustomizedTokenGranter();
+    public ClientDetailsService clientDetailsService() {
+        return new CustomizedClientDetailsService();
     }
 
-    private List<TokenGranter> getTokenGranters(AuthorizationServerEndpointsConfigurer config) {
-        ClientDetailsService clientDetailsService = config.getClientDetailsService();
-        AuthorizationServerTokenServices tokenServices = config.getTokenServices();
-        AuthorizationCodeServices authorizationCodeServices = config.getAuthorizationCodeServices();
-        OAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(config.getClientDetailsService());
-        List<TokenGranter> tokenGranters = new ArrayList();
-        //授权码模式
-        tokenGranters.add(new AuthorizationCodeTokenGranter(tokenServices, authorizationCodeServices, clientDetailsService, requestFactory));
-        //刷新token
-        tokenGranters.add(new RefreshTokenGranter(tokenServices, clientDetailsService, requestFactory));
-        //隐式模式
-        tokenGranters.add(new ImplicitTokenGranter(tokenServices, clientDetailsService, requestFactory));
-        //客户端模式
-        tokenGranters.add(new ClientCredentialsTokenGranter(tokenServices, clientDetailsService, requestFactory));
-        if (this.authenticationManager != null) {
-            //密码模式
-            tokenGranters.add(new ResourceOwnerPasswordTokenGranter(this.authenticationManager, tokenServices, clientDetailsService, requestFactory));
-            //自定义 短信模式
-            tokenGranters.add(new ResourceOwnerSmsCodeTokenGranter(this.authenticationManager, tokenServices, clientDetailsService, requestFactory));
-            //自定义 微信小程序授权模式
-            WechatMiniappTokenGranter wechatMiniappTokenGranter = wechatMiniappTokenGranter();
-            wechatMiniappTokenGranter.setTokenServices(tokenServices);
-            wechatMiniappTokenGranter.setClientDetailsService(clientDetailsService);
-            wechatMiniappTokenGranter.setRequestFactory(requestFactory);
-            tokenGranters.add(wechatMiniappTokenGranter);
-        }
-
-        //重新登录token生成器，设置属性tokenServices
-        AutoReSignInTokenGenerator autoReSignInTokenGenerator = autoReSignInTokenGenerator();
-        autoReSignInTokenGenerator.setTokenServices(tokenServices);
-
-        return tokenGranters;
-    }
-
-    /**
-     * 微信小程序授权器
-     * @return
-     */
     @Bean
-    public WechatMiniappTokenGranter wechatMiniappTokenGranter() {
-        return new WechatMiniappTokenGranter(socialUserDetailsService, this.authenticationManager);
+    public TokenGranter tokenGranter() {
+        DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService());
+
+        AuthorizationCodeServices codeServices = authorizationCodeServices();
+        AuthorizationServerTokenServices tokenServices = tokenServices();
+
+        List<TokenGranter> tokenGranters = Arrays.asList(
+                //授权码模式
+                new AuthorizationCodeTokenGranter(tokenServices, codeServices, clientDetailsService(), requestFactory),
+        //刷新token
+        new RefreshTokenGranter(tokenServices, clientDetailsService(), requestFactory),
+        //隐式模式
+        new ImplicitTokenGranter(tokenServices, clientDetailsService(), requestFactory),
+        //客户端模式
+        new ClientCredentialsTokenGranter(tokenServices, clientDetailsService(), requestFactory),
+
+            //密码模式
+            new ResourceOwnerPasswordTokenGranter(this.authenticationManager, tokenServices, clientDetailsService(), requestFactory),
+            //自定义 短信模式
+            new ResourceOwnerSmsCodeTokenGranter(this.authenticationManager, tokenServices, clientDetailsService(), requestFactory),
+            //自定义 微信小程序授权模
+            new WechatMiniappTokenGranter(socialUserDetailsService, this.authenticationManager, tokenServices, clientDetailsService(), requestFactory));
+        return new CompositeTokenGranter(tokenGranters);
+    }
+
+    @Bean
+    public AuthorizationServerTokenServices tokenServices() {
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(tokenStore());
+        tokenServices.setAuthenticationManager(authenticationManager);
+        return tokenServices;
+    }
+
+    @Bean
+    public AuthorizationCodeServices authorizationCodeServices() {
+        return new InMemoryAuthorizationCodeServices();
     }
 
     @Bean
@@ -197,9 +195,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
      */
     @Bean
     public AutoReSignInTokenGenerator autoReSignInTokenGenerator() {
-        return new AutoReSignInTokenGenerator();
+        return new AutoReSignInTokenGenerator(tokenServices());
     }
-
 
 }
 

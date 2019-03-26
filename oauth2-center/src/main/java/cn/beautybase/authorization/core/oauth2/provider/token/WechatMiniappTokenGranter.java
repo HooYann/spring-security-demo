@@ -46,9 +46,12 @@ public class WechatMiniappTokenGranter implements TokenGranter  {
     @Lazy
     private WechatMiniappService wechatMiniappService;
 
-    public WechatMiniappTokenGranter(SocialUserDetailsService socialUserDetailsService, AuthenticationManager authenticationManager) {
+    public WechatMiniappTokenGranter(SocialUserDetailsService socialUserDetailsService, AuthenticationManager authenticationManager, AuthorizationServerTokenServices tokenServices, ClientDetailsService clientDetailsService, OAuth2RequestFactory requestFactory) {
         this.socialUserDetailsService = socialUserDetailsService;
         this.authenticationManager = authenticationManager;
+        this.tokenServices = tokenServices;
+        this.clientDetailsService = clientDetailsService;
+        this.requestFactory =requestFactory;
     }
 
     public OAuth2Authentication getOAuth2Authentication(ClientDetails client, TokenRequest tokenRequest) {

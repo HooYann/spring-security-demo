@@ -13,8 +13,8 @@ public class SmsCodeController extends BaseController {
     private SmsCodeService smsCodeService;
 
     @GetMapping("/public/sms/send")
-    public Result<Void> userInfo(String phoneNumber) {
-        smsCodeService.send(phoneNumber);
-        return this.succeed();
+    public Result<String> userInfo(String phoneNumber) {
+        String code = smsCodeService.send(phoneNumber);
+        return this.succeed(code);
     }
 }

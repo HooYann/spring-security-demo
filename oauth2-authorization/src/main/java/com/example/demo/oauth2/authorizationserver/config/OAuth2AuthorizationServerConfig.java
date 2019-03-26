@@ -56,7 +56,8 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Autowired
     private RedisConnectionFactory redisConnectionFactory;
 
-    //KeyPair keyPair;
+    @Autowired
+    KeyPair keyPair;
 
     public OAuth2AuthorizationServerConfig(
             AuthenticationConfiguration authenticationConfiguration,
@@ -110,22 +111,22 @@ public class OAuth2AuthorizationServerConfig extends AuthorizationServerConfigur
     @Bean
     public TokenStore tokenStore() {
         //无状态jwt
-        //return new JwtTokenStore(accessTokenConverter());
+        return new JwtTokenStore(accessTokenConverter());
 
         //缓存
-        return new RedisTokenStore(redisConnectionFactory);
+        //return new RedisTokenStore(redisConnectionFactory);
     }
 
     @Bean
-    public AccessTokenConverter accessTokenConverter() {
+    public JwtAccessTokenConverter accessTokenConverter() {
         //jwt
-        //JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-        //converter.setKeyPair(keyPair);
-        //return converter;
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        converter.setKeyPair(keyPair);
+        return converter;
 
         //普通
-        DefaultAccessTokenConverter converter = new DefaultAccessTokenConverter();
-        return converter;
+        //DefaultAccessTokenConverter converter = new DefaultAccessTokenConverter();
+        //return converter;
     }
 
 

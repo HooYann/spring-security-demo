@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().mvcMatchers("/favicon.ico");
     }
 
+    @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         //原来的 用户名密码
         DaoAuthenticationProvider daoProvider = new DaoAuthenticationProvider();
@@ -86,6 +87,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }

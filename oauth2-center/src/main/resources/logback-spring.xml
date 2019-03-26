@@ -161,6 +161,8 @@
         第二种就是单独给dao下目录配置debug模式，代码如下，这样配置sql语句会打印，其他还是正常info级别：
      -->
 
+    <logger name="cn.beautybase.authorization" level="debug" />
+
 
     <!--
         root节点是必选节点，用来指定最基础的日志输出级别，只有一个level属性
@@ -171,8 +173,8 @@
 
     <!--开发环境:打印控制台-->
     <springProfile name="dev">
-        <logger name="dev" level="debug"/>
-        <root level="debug">
+        <logger name="dev" level="info"/>
+        <root level="info">
             <appender-ref ref="CONSOLE" />
             <appender-ref ref="ERROR_FILE" />
         </root>

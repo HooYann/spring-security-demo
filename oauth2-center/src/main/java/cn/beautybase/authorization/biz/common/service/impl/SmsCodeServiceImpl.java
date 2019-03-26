@@ -21,7 +21,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
     private SmsCodeLogService smsCodeLogService;
 
     @Override
-    public boolean send(String phoneNumber) {
+    public String send(String phoneNumber) {
         //生成短信验证码的规则
         //记录日志
         //防止短信炸弹
@@ -33,7 +33,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
         String code = createCode();
         log.info("SmsCodeServiceImpl.send, code={}", code);
         smsCodeCacheService.put(phoneNumber, code);
-        return true;
+        return code;
     }
 
     private static String createCode() {
